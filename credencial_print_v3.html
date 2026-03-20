@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Impresión de Credenciales (v3)</title>
+    <style>
+        body {
+            .credencial-oficial {
+    width: 350px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    font-family: Arial, sans-serif;
+    border: 1px solid #ddd;
+}
+
+.cred-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.cred-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.cred-nombre {
+    font-size: 17px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.cred-main {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 10px;
+}
+
+.cred-photo img {
+    width: 110px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+}
+
+.cred-info {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.cred-qr {
+    width: 70px;
+    margin: 5px 0;
+}
+
+.cred-barcode {
+    width: 150px;
+    margin-top: 5px;
+}
+
+.cred-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    border-top: 1px solid #ddd;
+    padding-top: 5px;
+    font-size: 12px;
+}
+
+.cred-number {
+    background: crimson;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sheet">
+        <div id="grid" class="grid"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function loadBatch() { try { return JSON.parse(localStorage.getItem('credencial_lote_v3') || '[]') } catch { return [] } }
+        const grid = document.getElementById('grid'); const arr = loadBatch(); if (arr.length === 0) { grid.innerHTML = '<div>No hay credenciales en el lote</div>' } else {
+            arr.forEach(it => {
+                const c = document.createElement('div');
+                c.className = 'credencial-oficial';
+
+                c.innerHTML = `
+        <div class="cred-body">
+            <div class="cred-header">
+                <img src="logo.png" class="cred-logo">
+                <div class="cred-nombre">${it.name}</div>
+            </div>
+
+            <div class="cred-main">
+                <div class="cred-photo">
+                    <img src="${it.photo || ''}">
+                </div>
+
+                <div class="cred-info">
+                    <div><strong>Equipo:</strong> ${it.team}</div>
+                    <div><strong>Nacimiento:</strong> ${it.dob}</div>
+                    <div><strong>Edad:</strong> ${it.age}</div>
+
+                    <img src="${it.qr}" class="cred-qr">
+
+                    <img src="${it.barcode}" class="cred-barcode">
+                </div>
+            </div>
+
+            <div class="cred-footer">
+                <div class="cred-id"><strong>ID:</strong> ${it.id}</div>
+                <div class="cred-verif">Código: ${it.code}</div>
+                <div class="cred-number">${it.number}</div>
+            </div>
+        </div>
+    `;
+
+                grid.appendChild(c);
+            });
+
+        }
+
+        // respond to request to generate images for ZIP
+        window.addEventListener('message', async (ev) => {
+            if (ev.data && ev.data.type === 'gen-images') {
+                const nodes = Array.from(document.querySelectorAll('.card')); const images = [];
+                for (const node of nodes) { const canvas = await html2canvas(node, { scale: 2 }); images.push(canvas.toDataURL('image/png')); }
+                // send back to opener
+                if (window.opener && !window.opener.closed) window.opener.postMessage({ type: 'batch-images', payload: images }, '*');
+            }
+        });
+    </script>
+</body>
+
+</html>

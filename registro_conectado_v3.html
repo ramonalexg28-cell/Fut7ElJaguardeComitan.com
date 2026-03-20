@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Registro de Jugador — v3 (QR, Barcode, Firma, Cámara)</title>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <style>
+        :root {
+            --bg: #071029;
+            --card: #0b1220;
+            --accent: #06b6d4;
+            --muted: #94a3b8
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: Inter, Arial, Helvetica, sans-serif
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--bg), #071a2a);
+            color: #e6eef6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px
+        }
+
+        .wrap {
+            width: 980px;
+            max-width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 24px
+        }
+
+        .panel {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6)
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 20px
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 6px
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.02);
+            color: inherit
+        }
+
+        .row {
+            display: flex;
+            gap: 12px
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 0;
+            background: linear-gradient(90deg, var(--accent), #22c1c3);
+            color: #042225;
+            font-weight: 700;
+            cursor: pointer
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--muted)
+        }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted)
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 220px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, #081422, #04202d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.02)
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .list-box {
+            max-height: 420px;
+            overflow: auto;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02)
+        }
+
+        .list-item {
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        /* signature */
+        .sig-pad {
+            background: #fff;
+            border-radius: 8px;
+            padding: 6px
+        }
+
+        canvas {
+            background: #fff;
+            border-radius: 6px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="panel">
+            <h1>Registro de Jugador — v3</h1>
+            <p class="small">Ahora con QR, código de barras, captura de firma y foto desde cámara. También puedes
+                exportar todo como ZIP con imágenes de las credenciales.</p>
+
+            <div style="margin-top:12px">
+                <label>Nombre completo</label>
+                <input id="name" type="text" placeholder="Ej. Juan López" />
+            </div>
+
+            <div style="margin-top:12px">
+                <label>Equipo</label>
+                <input id="team" type="text" placeholder="Nombre del equipo" />
+            </div>
+
+            <div class="row" style="margin-top:12px">
+                <div style="flex:1">
+                    <label>Fecha de nacimiento</label>
+                    <input id="dob" type="date" />
+                </div>
+                <div style="width:110px">
+                    <label>Edad</label>
+                    <input id="age" type="number" readonly placeholder="--" />
+                </div>
+            </div>
+
+            <div style="margin-top:12px">
+                <label>Número de playera</label>
+                <input id="number" type="number" min="0" max="99" placeholder="10" />
+            </div>
+
+            <div style="margin-top:12px">
+                <label>Foto del jugador (o toma desde cámara)</label>
+                <input id="photo" type="file" accept="image/*" />
+                <div style="margin-top:8px;display:flex;gap:8px">
+                    <button id="openCam" class="btn ghost">Abrir cámara</button>
+                    <button id="snap" class="btn ghost">Tomar foto</button>
+                    <button id="closeCam" class="btn ghost">Cerrar cámara</button>
+                </div>
+                <div id="videoWrap" style="display:none;margin-top:8px"><video id="video" width="320" height="240"
+                        autoplay playsinline style="border-radius:8px"></video></div>
+            </div>
+
+            <div style="margin-top:12px">
+                <label>Firma del jugador</label>
+                <div class="sig-pad">
+                    <canvas id="sigCanvas" width="380" height="120"></canvas>
+                    <div style="display:flex;gap:8px;margin-top:8px">
+                        <button id="clearSig" class="btn ghost">Borrar firma</button>
+                        <button id="saveSig" class="btn">Guardar firma</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+                <button id="openSingle" class="btn">Abrir credencial (ventana)</button>
+                <button id="addBatch" class="btn ghost">Agregar a lote</button>
+                <button id="clearBatch" class="btn ghost">Limpiar lote</button>
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:space-between">
+                <div class="small">Lote guardado en <strong>localStorage</strong></div>
+                <div>
+                    <button id="openBatchPrint" class="btn">Imprimir lote</button>
+                    <button id="downloadZip" class="btn ghost">Exportar ZIP</button>
+                </div>
+            </div>
+
+            <div style="margin-top:12px">
+                <div class="small">Preview foto</div>
+                <div class="photo-preview" id="previewPhoto">
+                    <img id="previewImg"
+                        src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><rect width='100%' height='100%' fill='%23061e2b'/><text x='50%' y='50%' fill='%2394a3b8' font-family='Arial' font-size='20' text-anchor='middle' dominant-baseline='middle'>Foto</text></svg>"
+                        alt="preview" />
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel">
+            <h1>Lista del Lote</h1>
+            <p class="small">Las credenciales añadidas aparecerán aquí. Puedes editarlas desde la credencial.</p>
+            <div class="list-box" id="listBox"></div>
+        </div>
+    </div>
+
+    <!-- libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        // helpers
+        const $ = id => document.getElementById(id);
+        const nameI = $('name'), teamI = $('team'), dobI = $('dob'), ageI = $('age'), numI = $('number');
+        const photoI = $('photo'), previewImg = $('previewImg');
+        const openSingle = $('openSingle'), addBatch = $('addBatch'), listBox = $('listBox');
+        const openBatchPrint = $('openBatchPrint'), clearBatch = $('clearBatch');
+        const downloadZip = $('downloadZip');
+
+        // camera
+        const openCam = $('openCam'), snap = $('snap'), closeCam = $('closeCam');
+        const videoWrap = $('videoWrap'), video = $('video');
+        let stream = null;
+
+        openCam.addEventListener('click', async () => {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                try { stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); video.srcObject = stream; videoWrap.style.display = 'block'; } catch (e) { alert('No se pudo abrir la cámara: ' + e.message) }
+            } else alert('Tu navegador no soporta cámara');
+        });
+        snap.addEventListener('click', () => {
+            if (!stream) { alert('Abre la cámara primero'); return }
+            const w = video.videoWidth, h = video.videoHeight; const c = document.createElement('canvas'); c.width = w; c.height = h; const ctx = c.getContext('2d'); ctx.drawImage(video, 0, 0, w, h); previewImg.src = c.toDataURL('image/png');
+        });
+        closeCam.addEventListener('click', () => { if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; videoWrap.style.display = 'none'; } });
+
+        // signature
+        const sigCanvas = $('sigCanvas'); const sigCtx = sigCanvas.getContext('2d'); let drawing = false; let last = { x: 0, y: 0 };
+        function resizeSig() { /* keep fixed size */ }
+        sigCanvas.addEventListener('mousedown', (e) => { drawing = true; last = { x: e.offsetX, y: e.offsetY }; });
+        sigCanvas.addEventListener('mousemove', (e) => { if (!drawing) return; sigCtx.strokeStyle = '#000'; sigCtx.lineWidth = 2; sigCtx.lineCap = 'round'; sigCtx.beginPath(); sigCtx.moveTo(last.x, last.y); sigCtx.lineTo(e.offsetX, e.offsetY); sigCtx.stroke(); last = { x: e.offsetX, y: e.offsetY }; });
+        window.addEventListener('mouseup', () => { drawing = false; });
+        $('clearSig').addEventListener('click', () => { sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height); });
+        $('saveSig').addEventListener('click', () => { const data = sigCanvas.toDataURL('image/png'); localStorage.setItem('last_signature', data); alert('Firma guardada'); });
+
+        // compute age
+        function computeAge(dobStr) { if (!dobStr) return ''; const dob = new Date(dobStr); if (isNaN(dob)) return ''; const today = new Date(); let age = today.getFullYear() - dob.getFullYear(); const m = today.getMonth() - dob.getMonth(); if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--; return age; }
+        dobI.addEventListener('change', () => { ageI.value = computeAge(dobI.value) || '' });
+
+        // photo preview
+        photoI.addEventListener('change', (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (ev) => { previewImg.src = ev.target.result }; r.readAsDataURL(f); })
+
+        // storage helpers
+        const KEY_BATCH = 'credencial_lote_v3';
+        const KEY_LAST = 'credencial_last_v3';
+        function loadBatch() { try { return JSON.parse(localStorage.getItem(KEY_BATCH) || '[]') } catch { return [] } }
+        function saveBatch(a) { localStorage.setItem(KEY_BATCH, JSON.stringify(a)) }
+        function saveLast(o) { localStorage.setItem(KEY_LAST, JSON.stringify(o)) }
+
+        function collectForm() { return { id: generateId(), name: nameI.value.trim(), team: teamI.value.trim(), dob: dobI.value || '', age: ageI.value || computeAge(dobI.value) || '', number: numI.value || '', photo: previewImg.src || '', signature: localStorage.getItem('last_signature') || '' } }
+
+        function generateId() { // simple uuidv4
+            return 'id-' + ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
+        }
+
+        function renderList() {
+            const arr = loadBatch(); if (arr.length === 0) { listBox.innerHTML = '<div class="small">No hay credenciales en el lote.</div>'; return } listBox.innerHTML = ''; arr.forEach((item, idx) => { const div = document.createElement('div'); div.className = 'list-item'; div.innerHTML = `<div><strong>${item.name}</strong><div class='small'>${item.team} — #${item.number || '--'}</div></div><div style='display:flex;gap:6px;align-items:center'><button data-idx='${idx}' class='btn ghost open-mini'>Abrir</button><button data-idx='${idx}' class='btn ghost del-mini'>Eliminar</button></div>`; listBox.appendChild(div); });
+            listBox.querySelectorAll('.del-mini').forEach(b => b.addEventListener('click', e => { const i = Number(e.currentTarget.dataset.idx); const a = loadBatch(); a.splice(i, 1); saveBatch(a); renderList(); }));
+            listBox.querySelectorAll('.open-mini').forEach(b => b.addEventListener('click', e => { const i = Number(e.currentTarget.dataset.idx); const a = loadBatch(); const p = a[i]; p._batchIndex = i; localStorage.setItem(KEY_LAST, JSON.stringify(p)); const w = window.open('credencial_conectada_v3.html?mode=single', 'credSingle'); setTimeout(() => { w.postMessage({ type: 'single-cred', payload: p }, '*') }, 400); }));
+        }
+
+        addBatch.addEventListener('click', () => { const p = collectForm(); if (!p.name) { alert('Ingrese al menos el nombre del jugador'); return } const arr = loadBatch(); arr.push(p); saveBatch(arr); renderList(); alert('Agregado al lote'); })
+        $('clearBatch').addEventListener('click', () => { if (!confirm('Eliminar todo el lote?')) return; localStorage.removeItem(KEY_BATCH); renderList(); })
+        openBatchPrint.addEventListener('click', () => { window.open('credencial_print_v3.html', 'credBatch'); })
+        openSingle.addEventListener('click', () => { const p = collectForm(); if (!p.name) { alert('Ingrese al menos el nombre del jugador'); return } saveLast(p); const w = window.open('credencial_conectada_v3.html?mode=single', 'credSingle'); setTimeout(() => { w.postMessage({ type: 'single-cred', payload: p }, '*') }, 400); })
+
+        // ZIP export: render each card via html2canvas from printable page
+        downloadZip.addEventListener('click', async () => {
+            const arr = loadBatch(); if (arr.length === 0) { alert('No hay items en el lote'); return }
+            const w = window.open('credencial_print_v3.html', '_blank'); // page will render from localStorage
+            // wait for it to render
+            setTimeout(async () => {
+                try {
+                    const imgs = [];
+                    // instruct the print window to generate images via postMessage
+                    w.postMessage({ type: 'gen-images' }, '*');
+                    // receive images
+                    window.addEventListener('message', async function handler(ev) {
+                        if (ev.data && ev.data.type === 'batch-images' && ev.data.payload) {
+                            window.removeEventListener('message', handler);
+                            const zip = new JSZip();
+                            ev.data.payload.forEach((dataUrl, idx) => { const b = dataUrl.split(',')[1]; zip.file(`credencial_${idx + 1}.png`, b, { base64: true }); });
+                            const content = await zip.generateAsync({ type: 'blob' });
+                            saveAs(content, 'credenciales.zip');
+                        }
+                    });
+                } catch (err) { alert('Error generando ZIP: ' + err.message) }
+            }, 900);
+        });
+
+        // init
+        renderList();
+
+    </script>
+</body>
+
+</html>

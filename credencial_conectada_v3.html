@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Credencial — Conectada v3 (QR, Barcode, Verif)</title>
+    <style>
+        :root {
+            --bg: #f3f6f8;
+            --card: #fff;
+            --accent: #b71c1c;
+            --muted: #536b75
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: Inter, Arial, Helvetica, sans-serif
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 28px
+        }
+
+        .card {
+            width: 340px;
+            border-radius: 6px;
+            padding: 12px;
+            background: var(--card);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            border: 1px solid #e2e8ec;
+            color: #0b1220
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 6px;
+            background: #fff;
+            border: 1px solid #e2e8ec;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--accent)
+        }
+
+        .photo {
+            width: 110px;
+            height: 140px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #cfd8dc
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .meta {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 6px
+        }
+
+        .num-bubble {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            background: var(--accent);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 800
+        }
+
+        .qr {
+            width: 64px;
+            height: 64px;
+            background: #fff;
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #e2e8ec
+        }
+
+        .barcode {
+            height: 28px;
+            width: 140px;
+            background: repeating-linear-gradient(90deg, #000, #000 2px, transparent 2px, transparent 6px)
+        }
+
+        .holo {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
+            mix-blend-mode: screen;
+            opacity: 0.6
+        }
+
+        .verif {
+            font-size: 11px;
+            color: #334
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px
+        }
+
+        .btn {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 0;
+            background: linear-gradient(90deg, #06b6d4, #22c1c3);
+            color: #042225;
+            cursor: pointer
+        }
+
+        .btn.ghost {
+            background: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.06)
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div id="card" class="card" title="Haz clic para opciones">
+            <div style="display:flex;gap:12px;align-items:center">
+                <div class="logo">LOGO</div>
+                <div>
+                    <div style="font-weight:800;font-size:16px" id="pName">NOMBRE APELLIDO</div>
+                    <div class="meta" id="pTeam">Equipo: —</div>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:10px">
+                <div class="photo"><img id="pImg" src="" /></div>
+                <div>
+                    <div style="font-size:13px"><strong>Nacimiento:</strong> <span id="pDob">--</span></div>
+                    <div class="meta"><strong>Edad:</strong> <span id="pAge">--</span></div>
+                    <div style="margin-top:8px">
+                        <div class="qr" id="pQR"></div>
+                    </div>
+                    <div style="margin-top:8px">
+                        <div id="pBarcode" class="barcode"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;color:#123"><strong>ID:</strong> <span id="pId">--</span></div>
+            <div style="margin-top:6px" class="verif">Código de verificación: <span id="pVerif">--</span></div>
+            <div class="num-bubble" id="pNum">10</div>
+            <div class="holo" aria-hidden="true"></div>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+            <button id="editBtn" class="btn ghost">Modificar en registro</button>
+            <button id="delBtn" class="btn ghost">Eliminar</button>
+            <button id="printBtn" class="btn">Imprimir</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script>
+        const pImg = document.getElementById('pImg'), pName = document.getElementById('pName'), pTeam = document.getElementById('pTeam');
+        const pDob = document.getElementById('pDob'), pAge = document.getElementById('pAge'), pNum = document.getElementById('pNum');
+        const pId = document.getElementById('pId'), pVerif = document.getElementById('pVerif');
+
+        window.addEventListener('message', ev => {
+            if (!ev.data) return;
+            if (ev.data.type === 'single-cred' && ev.data.payload) { render(ev.data.payload); }
+            if (ev.data.type === 'update-cred' && ev.data.payload) { render(ev.data.payload); }
+        });
+
+        function render(obj) {
+            pName.textContent = obj.name || 'NOMBRE APELLIDO'; pTeam.textContent = 'Equipo: ' + (obj.team || '—'); pDob.textContent = obj.dob ? new Date(obj.dob).toLocaleDateString() : '--'; pAge.textContent = obj.age || '--'; pNum.textContent = obj.number || '--'; if (obj.photo) pImg.src = obj.photo; pId.textContent = obj.id || generateId(); pVerif.textContent = computeVerif(pId.textContent);
+            // QR
+            const qr = new QRious({ value: JSON.stringify({ id: pId.textContent, name: obj.name }), size: 80 }); document.getElementById('pQR').innerHTML = qr.toDataURL() ? `<img src="${qr.toDataURL()}" width="64" height="64">` : '';
+            // barcode
+            const bc = document.createElement('svg'); bc.setAttribute('id', 'svgBarcode'); bc.setAttribute('width', '140'); bc.setAttribute('height', '28'); document.getElementById('pBarcode').innerHTML = ''; document.getElementById('pBarcode').appendChild(bc); JsBarcode(bc, obj.number || '000', { format: 'CODE128', displayValue: false, height: 28, width: 1.2 });
+        }
+
+        function computeVerif(id) { // simple checksum
+            let s = 0; for (let i = 0; i < id.length; i++) s += id.charCodeAt(i); return ('0000' + (s % 100000)).slice(-5);
+        }
+        function generateId() { return 'ID' + Math.random().toString(36).slice(2, 10).toUpperCase(); }
+
+        // UI
+        document.getElementById('editBtn').addEventListener('click', () => { if (window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'edit-request', payload: collectCurrent() }, '*'); alert('Se solicitó edición en la ventana de registro'); } else alert('No se detectó la ventana de registro'); });
+        document.getElementById('delBtn').addEventListener('click', () => {
+            if (confirm('Eliminar esta credencial?')) { // remove from localStorage
+                const last = localStorage.getItem('credencial_last_v3'); if (last) localStorage.removeItem('credencial_last_v3'); // also remove from batch if index present
+                alert('Eliminada'); location.reload();
+            }
+        });
+        document.getElementById('printBtn').addEventListener('click', () => { window.print(); });
+
+        function collectCurrent() { return { id: pId.textContent, name: pName.textContent, team: pTeam.textContent.replace('Equipo: ', ''), dob: pDob.textContent, age: pAge.textContent, number: pNum.textContent, photo: pImg.src } }
+
+        // on load: fallback last
+        (function () { const raw = localStorage.getItem('credencial_last_v3'); if (raw) render(JSON.parse(raw)); })();
+    </script>
+</body>
+
+</html>
