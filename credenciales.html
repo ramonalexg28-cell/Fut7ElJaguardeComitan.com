@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credenciales — Fut 7 El Jaguar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- QR Code library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="credenciales.css">
+    <script>
+        const t = localStorage.getItem('tema_jaguar') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+    </script>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <button class="btn-volver" id="btnVolver">← Volver</button>
+        </div>
+        <div class="header-center">
+            <div class="header-icon">🪪</div>
+            <div>
+                <div class="header-title" id="headerTitle">Credenciales</div>
+                <div class="header-sub" id="headerSub">Equipo · Categoría</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-count">
+                <span class="header-count-num" id="headerCount">0</span>
+                <span class="header-count-lbl">Jugadores</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <span class="toolbar-info" id="toolbarInfo">Selecciona jugadores para imprimir</span>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn-select-all" id="btnSelectAll" onclick="toggleSelectAll()">
+                ☐ Seleccionar todos
+            </button>
+            <button class="btn-qr" onclick="generarQR()">
+                📲 QR Capitán
+            </button>
+            <button class="btn-print" id="btnPrint" onclick="imprimirSeleccionados()" disabled>
+                🖨️ Imprimir (<span id="countSelected">0</span>)
+            </button>
+        </div>
+    </div>
+
+    <!-- LISTA DE JUGADORES PARA SELECCIONAR -->
+    <main class="container">
+        <div class="jugadores-grid" id="jugadoresGrid"></div>
+
+        <div id="estadoVacio" class="estado-vacio" style="display:none;">
+            <div class="vacio-icon">🪪</div>
+            <div class="vacio-title">Sin jugadores activos</div>
+            <div class="vacio-sub">Registra jugadores para generar credenciales</div>
+        </div>
+    </main>
+
+    <!-- MODAL QR CAPITÁN -->
+    <div id="overlayQR" class="overlay-modal"></div>
+    <div id="modalQR" class="modal-qr">
+        <div class="modal-qr-header">
+            <div class="modal-qr-title">📲 QR para el Capitán</div>
+            <button class="modal-qr-close" onclick="cerrarQR()">✕</button>
+        </div>
+        <div class="modal-qr-body">
+            <div class="qr-instruccion">Escanea este código para ver la lista del equipo en cualquier celular</div>
+            <div id="qrCanvas" class="qr-canvas"></div>
+            <div class="qr-equipo-info">
+                <div class="qr-equipo-nombre" id="qrEquipoNombre"></div>
+                <div class="qr-equipo-cat" id="qrEquipoCat"></div>
+            </div>
+            <div class="qr-actions">
+                <button class="btn-print-qr" onclick="imprimirQR()">🖨️ Imprimir QR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZONA DE IMPRESIÓN (oculta en pantalla, visible al imprimir) -->
+    <div id="zonaPrint" class="zona-print"></div>
+
+    <script src="credenciales.js"></script>
+</body>
+</html>

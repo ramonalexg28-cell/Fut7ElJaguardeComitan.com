@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Central — Fut 7 El Jaguar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;900&family=Oswald:wght@400;700&family=Anton&family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="editor-central.css">
+    <script>
+        var t = localStorage.getItem('tema_jaguar') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+    </script>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     TOPBAR
+══════════════════════════════════════ -->
+<header class="topbar">
+    <div class="topbar-brand">
+        <div class="brand-logo">🪪</div>
+        <div>
+            <div class="brand-title">JAGUAR</div>
+            <div class="brand-sub">Editor</div>
+        </div>
+    </div>
+
+    <button class="btn-top btn-top-ghost" onclick="history.back()">← Volver</button>
+
+    <div class="topbar-name">
+        <input type="text" id="nombreInput" value="Sin nombre" onchange="estado.nombre=this.value">
+    </div>
+
+    <div class="topbar-actions">
+        <div class="zoom-control">
+            <button class="zoom-btn" onclick="cambiarZoom(-15)">−</button>
+            <span class="zoom-val" id="zoomVal">100%</span>
+            <button class="zoom-btn" onclick="cambiarZoom(15)">+</button>
+        </div>
+        <button class="btn-top btn-top-ghost" onclick="deshacer()" title="Deshacer (Ctrl+Z)">↩ Deshacer</button>
+        <button class="btn-top btn-top-ghost" onclick="rehacerAccion()" title="Rehacer (Ctrl+Y)">↪ Rehacer</button>
+        <button class="btn-top btn-top-save" onclick="guardarDiseno()">💾 Guardar</button>
+    </div>
+</header>
+
+<!-- ══════════════════════════════════════
+     WORKSPACE
+══════════════════════════════════════ -->
+<div class="workspace">
+
+    <!-- TOOLBAR IZQUIERDA -->
+    <aside class="toolbar-left" id="toolbarLeft">
+
+        <div class="tool-section">
+            <div class="tool-section-title">Insertar</div>
+            <button class="tool-btn" onclick="setTool('texto')" id="tool-texto">
+                <span class="tool-icon">🔤</span> Texto
+            </button>
+            <button class="tool-btn" onclick="setTool('rect')" id="tool-rect">
+                <span class="tool-icon">⬜</span> Rectángulo
+            </button>
+            <button class="tool-btn" onclick="setTool('linea')" id="tool-linea">
+                <span class="tool-icon">➖</span> Línea
+            </button>
+            <button class="tool-btn" onclick="setTool('foto')" id="tool-foto">
+                <span class="tool-icon">👤</span> Foto Jugador
+            </button>
+        </div>
+
+        <div class="tool-section">
+            <div class="tool-section-title">Plantillas</div>
+            <div class="plantillas-grid" id="plantillasGrid"></div>
+        </div>
+
+        <div class="tool-section" style="border-bottom:none; flex:1;">
+            <div class="tool-section-title">Capas</div>
+            <div class="layers-list" id="layersList"></div>
+        </div>
+
+    </aside>
+
+    <!-- CANVAS CENTRAL -->
+    <main class="canvas-area" id="canvasArea">
+        <div class="canvas-wrap" id="canvasWrap">
+            <div id="credCanvas">
+                <div id="canvasBg"></div>
+                <div id="canvasImgOverlay"></div>
+            </div>
+        </div>
+        <div class="inserting-hint" id="insertHint">Clic para insertar · ESC para cancelar</div>
+    </main>
+
+    <!-- PANEL PROPIEDADES -->
+    <aside class="panel-props" id="panelProps">
+
+        <div class="props-header">
+            <div class="props-header-title" id="propsTitle">PROPIEDADES</div>
+            <button class="props-dup-btn" id="propsDupBtn" style="display:none" onclick="ctxAccion('duplicar')">⧉ Duplicar</button>
+            <button class="props-del-btn" id="propsDelBtn" style="display:none" onclick="eliminarSeleccionado()">🗑️ Eliminar</button>
+        </div>
+
+        <div class="props-empty-state" id="propsEmpty">
+            <div class="props-empty-icon">🖱️</div>
+            <div class="props-empty-text">Haz clic en un elemento para ver sus propiedades.<br>Doble clic para editar texto.</div>
+        </div>
+
+        <div id="propsContent" style="display:none"></div>
+
+        <!-- Fondo (siempre visible al fondo del panel) -->
+        <div id="fondoProps" style="margin-top:auto">
+            <div class="bg-props-section">
+                <div class="tool-section-title" style="margin-bottom:8px">Fondo de Credencial</div>
+                <div class="bg-gradient-preview" id="bgGradPreview"></div>
+                <div class="prop-row">
+                    <span class="prop-lbl">Color 1</span>
+                    <input type="color" class="prop-color" id="bgColor1" value="#1d4ed8" oninput="actualizarFondo()">
+                    <span class="prop-lbl" style="margin-left:4px">Color 2</span>
+                    <input type="color" class="prop-color" id="bgColor2" value="#0a1628" oninput="actualizarFondo()">
+                </div>
+                <div class="bg-img-area" onclick="document.getElementById('bgImgInput').click()">
+                    <input type="file" id="bgImgInput" accept="image/*" style="display:none" onchange="cargarImagenFondo(this)">
+                    <div class="bg-img-lbl">📷 Subir imagen de fondo</div>
+                    <img id="bgImgThumb" class="bg-img-thumb">
+                </div>
+                <div class="prop-row" style="margin-top:6px">
+                    <span class="prop-lbl" style="min-width:70px">Opacidad img</span>
+                    <input type="range" class="prop-range" id="bgImgOp" min="0" max="100" value="80"
+                           oninput="actualizarFondo(); document.getElementById('bgOpVal').textContent = this.value + '%'">
+                    <span class="prop-range-val" id="bgOpVal">80%</span>
+                </div>
+                <button onclick="quitarImagenFondo()" class="btn-quitar-img">✕ Quitar imagen</button>
+            </div>
+        </div>
+
+    </aside>
+
+</div><!-- /workspace -->
+
+<!-- CONTEXT MENU -->
+<div class="ctx-menu" id="ctxMenu">
+    <div class="ctx-item" onclick="ctxAccion('arriba')">⬆️ Traer arriba</div>
+    <div class="ctx-item" onclick="ctxAccion('abajo')">⬇️ Enviar abajo</div>
+    <div class="ctx-item" onclick="ctxAccion('frente')">⬆️⬆️ Al frente</div>
+    <div class="ctx-item" onclick="ctxAccion('fondo-capa')">⬇️⬇️ Al fondo</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="ctxAccion('duplicar')">📋 Duplicar</div>
+    <div class="ctx-item" onclick="ctxAccion('centrarH')">↔️ Centrar horizontal</div>
+    <div class="ctx-item" onclick="ctxAccion('centrarV')">↕️ Centrar vertical</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item danger" onclick="ctxAccion('eliminar')">🗑️ Eliminar</div>
+</div>
+
+<!-- MODAL ASIGNACIÓN -->
+<div class="modal-overlay" id="modalAsignacion">
+    <div class="modal-box">
+        <div class="modal-title">🏷️ Asignar Diseño</div>
+        <p class="modal-text">
+            Este diseño se asignará a la categoría
+            <strong id="modalCatName" style="color:var(--accent)"></strong>.<br>
+            Los jugadores verán esta credencial.
+        </p>
+        <div class="modal-btns">
+            <button class="modal-btn-cancel" onclick="cerrarAsignacion()">Cancelar</button>
+            <button class="modal-btn-ok" onclick="confirmarAsignacion()">✓ Asignar</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="editor-central.js"></script>
+</body>
+</html>

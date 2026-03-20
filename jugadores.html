@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugadores — Fut 7 El Jaguar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="jugadores.css">
+    <script>
+        const t = localStorage.getItem('tema_jaguar') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+    </script>
+</head>
+<body>
+
+    <!-- FONDO ESTADIO ANIMADO -->
+    <div class="stadium-bg" aria-hidden="true">
+        <div class="stadium-lights">
+            <div class="light light-1"></div>
+            <div class="light light-2"></div>
+            <div class="light light-3"></div>
+            <div class="light light-4"></div>
+        </div>
+        <svg class="pitch-lines" viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.06"/>
+                    <stop offset="100%" stop-color="currentColor" stop-opacity="0.02"/>
+                </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="1200" height="600" fill="url(#g1)"/>
+            <rect x="60" y="40" width="1080" height="520" fill="none" stroke="currentColor" stroke-width="2.5" stroke-opacity="0.18"/>
+            <line x1="600" y1="40" x2="600" y2="560" stroke="currentColor" stroke-width="2" stroke-opacity="0.18"/>
+            <circle cx="600" cy="300" r="90" fill="none" stroke="currentColor" stroke-width="2" stroke-opacity="0.18"/>
+            <circle cx="600" cy="300" r="5" fill="currentColor" fill-opacity="0.2"/>
+            <rect x="60" y="170" width="170" height="260" fill="none" stroke="currentColor" stroke-width="1.8" stroke-opacity="0.15"/>
+            <rect x="60" y="220" width="70" height="160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.12"/>
+            <path d="M230 170 A90 90 0 0 1 230 430" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.15"/>
+            <rect x="970" y="170" width="170" height="260" fill="none" stroke="currentColor" stroke-width="1.8" stroke-opacity="0.15"/>
+            <rect x="1070" y="220" width="70" height="160" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.12"/>
+            <path d="M970 170 A90 90 0 0 0 970 430" fill="none" stroke="currentColor" stroke-width="1.5" stroke-opacity="0.15"/>
+            <circle cx="170" cy="300" r="5" fill="currentColor" fill-opacity="0.18"/>
+            <circle cx="1030" cy="300" r="5" fill="currentColor" fill-opacity="0.18"/>
+        </svg>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-left">
+            <button class="btn-volver" id="btnVolver">← Volver</button>
+        </div>
+        <div class="header-center">
+            <div class="team-emblem" id="teamEmblem"></div>
+            <div class="header-info">
+                <div class="header-equipo" id="tituloEquipo">Equipo</div>
+                <div class="header-cat" id="headerCat">Categoría</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-stats-row">
+                <div class="hstat green">
+                    <span class="hstat-num" id="statActivos">0</span>
+                    <span class="hstat-lbl">Activos</span>
+                </div>
+                <div class="hstat-sep"></div>
+                <div class="hstat red">
+                    <span class="hstat-num" id="statBaja">0</span>
+                    <span class="hstat-lbl">Baja</span>
+                </div>
+                <div class="hstat-sep"></div>
+                <div class="hstat gold">
+                    <span class="hstat-num" id="statRefuerzos">0</span>
+                    <span class="hstat-lbl">Refuerzos</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- BANNER DE EQUIPO -->
+    <div class="team-banner" id="teamBanner">
+        <div class="banner-left">
+            <div class="banner-jersey" id="bannerJersey"></div>
+            <div class="banner-info">
+                <div class="banner-nombre" id="bannerNombre">Equipo</div>
+                <div class="banner-cat" id="bannerCat">Categoría</div>
+            </div>
+        </div>
+        <div class="banner-right">
+            <div class="banner-stat-block">
+                <div class="banner-stat-num" id="bannerTotal">0</div>
+                <div class="banner-stat-lbl">Jugadores</div>
+            </div>
+            <div class="banner-divider"></div>
+            <!-- BOTÓN CREDENCIALES -->
+            <!-- BOTÓN DISEÑAR CREDENCIAL -->
+            <button class="btn-add-banner" onclick="irADisenoCredencial()" style="background:linear-gradient(135deg,#c8a84b,#a07828);border:none;color:#000;">
+                <span class="btn-add-icon">🎨</span>
+                <span>Diseñar Credencial</span>
+            </button>
+            <button class="btn-add-banner btn-credenciales" onclick="irACredenciales()">
+                <span class="btn-add-icon">🪪</span>
+                <span>Credenciales</span>
+            </button>
+            <!-- BOTÓN FICHAR -->
+            <button class="btn-add-banner" onclick="mostrarFormulario()">
+                <span class="btn-add-icon">+</span>
+                <span>Fichar Jugador</span>
+            </button>
+        </div>
+    </div>
+
+    <main class="container">
+
+        <!-- FORM AGREGAR -->
+        <div id="formAgregar" class="form-agregar">
+            <div class="form-inner">
+                <div class="form-header-row">
+                    <div class="form-title-block">
+                        <div class="form-title">Fichar Jugador</div>
+                        <div class="form-sub">Nuevo fichaje para la plantilla</div>
+                    </div>
+                    <button class="form-close" onclick="ocultarFormulario()">✕</button>
+                </div>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label class="form-lbl" for="nombreJugador">Nombre completo</label>
+                        <input type="text" id="nombreJugador" class="form-input" placeholder="Nombre del jugador">
+                        <div id="errorNombre" class="error-msg"></div>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-lbl" for="numeroJugador">Dorsal</label>
+                        <input type="number" id="numeroJugador" class="form-input" placeholder="Ej: 10" min="0">
+                        <div id="errorNumero" class="error-msg"></div>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-lbl" for="fechaNacimiento">Fecha de nacimiento</label>
+                        <input type="date" id="fechaNacimiento" class="form-input">
+                        <div id="errorFecha" class="error-msg"></div>
+                    </div>
+                    <div class="form-field">
+                        <label class="form-lbl" for="fotoJugador">URL foto (opcional)</label>
+                        <input type="text" id="fotoJugador" class="form-input" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-cancelar" onclick="ocultarFormulario()">Cancelar</button>
+                    <button class="btn-fichar" onclick="guardarJugador()">✓ Fichar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRID CROMOS -->
+        <div class="tarjetas-container" id="listaJugadores"></div>
+
+        <!-- ESTADO VACÍO -->
+        <div id="estadoVacio" class="estado-vacio" style="display:none;">
+            <div class="vacio-cromo">
+                <div class="cromo-empty">
+                    <div class="cromo-empty-num">?</div>
+                    <div class="cromo-empty-text">Sin jugadores</div>
+                </div>
+            </div>
+            <div class="vacio-title">Plantilla vacía</div>
+            <div class="vacio-sub">Ficha el primer jugador para comenzar</div>
+        </div>
+
+    </main>
+
+    <!-- MODALES -->
+    <div id="overlayModal" class="overlay-modal"></div>
+
+    <div id="modalEliminar" class="modal modal-warn">
+        <div class="modal-icon">🗑️</div>
+        <h3 class="modal-title">Eliminar Jugador</h3>
+        <p class="modal-text">¿Eliminar a "<span id="nombreEliminar" style="font-weight:700;color:var(--red)"></span>" de la plantilla?</p>
+        <div class="modal-actions">
+            <button class="btn-cancelar" onclick="ocultarModalEliminar()">Cancelar</button>
+            <button class="btn-eliminar-modal" onclick="confirmarEliminarJugador()">Eliminar</button>
+        </div>
+    </div>
+
+    <div id="modalRefuerzo" class="modal modal-warn">
+        <div class="modal-icon">⚡</div>
+        <h3 class="modal-title" id="tituloModalRefuerzo">Límite de Refuerzos</h3>
+        <p class="modal-text" id="textoModalRefuerzo"></p>
+        <div class="modal-actions">
+            <button class="btn-fichar" onclick="ocultarModalRefuerzo()">Entendido</button>
+        </div>
+    </div>
+
+    <script src="jugadores.js"></script>
+</body>
+</html>

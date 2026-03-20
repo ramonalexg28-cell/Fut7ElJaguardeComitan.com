@@ -1,0 +1,497 @@
+/* =============================================
+   CREDENCIALES · FUT 7 EL JAGUAR
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;900&display=swap');
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+    --bg:           #09111f;
+    --bg-card:      rgba(255,255,255,0.04);
+    --bg-card-2:    rgba(255,255,255,0.07);
+    --bg-header:    rgba(9,17,31,0.95);
+    --border:       rgba(255,255,255,0.08);
+    --text-primary: #ffffff;
+    --text-second:  rgba(255,255,255,0.55);
+    --text-muted:   rgba(255,255,255,0.28);
+    --gold:         #c8a84b;
+    --gold-dim:     rgba(200,168,75,0.15);
+    --accent:       #3b82f6;
+    --accent-dim:   rgba(59,130,246,0.15);
+    --green:        #22c55e;
+    --shadow:       rgba(0,0,0,0.6);
+    --selected-border: rgba(59,130,246,0.8);
+    --selected-bg:  rgba(59,130,246,0.12);
+}
+
+[data-theme="light"] {
+    --bg:           #eef2f8;
+    --bg-card:      rgba(255,255,255,0.75);
+    --bg-card-2:    rgba(255,255,255,0.95);
+    --bg-header:    rgba(238,242,248,0.96);
+    --border:       rgba(0,0,0,0.08);
+    --text-primary: #0f172a;
+    --text-second:  rgba(15,23,42,0.6);
+    --text-muted:   rgba(15,23,42,0.38);
+    --gold:         #a07828;
+    --gold-dim:     rgba(160,120,40,0.1);
+    --accent:       #2563eb;
+    --accent-dim:   rgba(37,99,235,0.1);
+    --green:        #16a34a;
+    --shadow:       rgba(0,0,0,0.1);
+    --selected-border: rgba(37,99,235,0.8);
+    --selected-bg:  rgba(37,99,235,0.08);
+}
+
+html, body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* ── HEADER ── */
+.header {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 2rem;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+}
+
+.header-left, .header-right { flex: 1; }
+.header-right { display: flex; justify-content: flex-end; }
+.header-center { display: flex; align-items: center; gap: 0.8rem; }
+
+.header-icon { font-size: 1.6rem; }
+
+.header-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.3rem; letter-spacing: 4px; color: var(--text-primary); line-height: 1;
+}
+.header-sub {
+    font-size: 0.6rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold); margin-top: 2px; font-weight: 600;
+}
+
+.header-count {
+    display: flex; flex-direction: column; align-items: flex-end;
+    background: var(--accent-dim); border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 10px; padding: 0.4rem 0.9rem;
+}
+.header-count-num {
+    font-family: 'Bebas Neue', cursive; font-size: 1.3rem; color: var(--accent); line-height: 1;
+}
+.header-count-lbl {
+    font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted);
+}
+
+.btn-volver {
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-second); padding: 0.55rem 1.1rem; border-radius: 10px;
+    font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; letter-spacing: 1px; transition: all 0.2s;
+}
+.btn-volver:hover { border-color: var(--accent); color: var(--text-primary); }
+
+/* ── TOOLBAR ── */
+.toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+    flex-wrap: wrap; gap: 0.8rem;
+    background: var(--bg-card);
+}
+
+.toolbar-left { flex: 1; }
+.toolbar-info {
+    font-size: 0.8rem; color: var(--text-muted); letter-spacing: 1px;
+}
+
+.toolbar-right { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+
+.btn-select-all {
+    padding: 0.6rem 1.2rem; border-radius: 10px;
+    background: var(--bg-card-2); border: 1px solid var(--border);
+    color: var(--text-second); font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+.btn-select-all:hover { border-color: var(--accent); color: var(--text-primary); }
+
+.btn-qr {
+    padding: 0.6rem 1.2rem; border-radius: 10px;
+    background: var(--gold-dim); border: 1px solid rgba(200,168,75,0.35);
+    color: var(--gold); font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+.btn-qr:hover { background: rgba(200,168,75,0.25); transform: translateY(-1px); }
+
+.btn-print {
+    padding: 0.6rem 1.4rem; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #1d4ed8);
+    border: none; color: #fff; font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.5px; box-shadow: 0 4px 14px rgba(59,130,246,0.3);
+}
+.btn-print:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59,130,246,0.45); }
+.btn-print:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── CONTAINER ── */
+.container {
+    max-width: 1100px; margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* ── GRID JUGADORES ── */
+.jugadores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+/* ── CARD JUGADOR (seleccionable) ── */
+.jug-card {
+    position: relative;
+    background: var(--bg-card-2);
+    border: 2px solid var(--border);
+    border-radius: 16px; padding: 1rem;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.9rem;
+    user-select: none;
+}
+.jug-card:hover {
+    border-color: rgba(59,130,246,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow);
+}
+.jug-card.seleccionado {
+    border-color: var(--selected-border);
+    background: var(--selected-bg);
+    box-shadow: 0 0 0 1px var(--selected-border);
+}
+
+.jug-check {
+    position: absolute; top: 10px; right: 10px;
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; transition: all 0.2s;
+}
+.jug-card.seleccionado .jug-check {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+}
+
+.jug-foto {
+    width: 54px; height: 54px; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jug-info { flex: 1; min-width: 0; }
+.jug-nombre {
+    font-family: 'Bebas Neue', cursive; font-size: 1rem;
+    letter-spacing: 1.5px; color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.jug-dorsal { font-size: 0.75rem; color: var(--accent); font-weight: 700; }
+.jug-edad   { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
+
+.jug-badge-refuerzo {
+    position: absolute; top: -6px; left: 12px;
+    background: linear-gradient(135deg, var(--gold), #e8a820);
+    color: #000; padding: 0.1rem 0.5rem;
+    border-radius: 20px; font-size: 0.52rem; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+}
+
+/* ── ESTADO VACÍO ── */
+.estado-vacio {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.7rem; padding: 4rem 1rem; text-align: center;
+}
+.vacio-icon { font-size: 3rem; opacity: 0.35; }
+.vacio-title {
+    font-family: 'Bebas Neue', cursive; font-size: 1.3rem;
+    letter-spacing: 3px; color: var(--text-second);
+}
+.vacio-sub { font-size: 0.78rem; color: var(--text-muted); }
+
+/* ── MODAL QR ── */
+.overlay-modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    display: none; z-index: 1999; backdrop-filter: blur(8px);
+}
+.overlay-modal.activo { display: block; }
+
+.modal-qr {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%,-50%) scale(0.96);
+    background: var(--bg-card-2); border: 1px solid var(--border);
+    border-radius: 24px; padding: 0;
+    width: 90%; max-width: 380px;
+    display: none; z-index: 2000;
+    opacity: 0; transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    overflow: hidden;
+}
+.modal-qr.activo { display: block; opacity: 1; transform: translate(-50%,-50%) scale(1); }
+
+.modal-qr-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--gold-dim);
+}
+.modal-qr-title {
+    font-family: 'Bebas Neue', cursive; font-size: 1.3rem;
+    letter-spacing: 3px; color: var(--gold);
+}
+.modal-qr-close {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 1rem; cursor: pointer; padding: 0.3rem;
+    transition: color 0.2s;
+}
+.modal-qr-close:hover { color: var(--text-primary); }
+
+.modal-qr-body {
+    padding: 1.8rem;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+
+.qr-instruccion {
+    font-size: 0.78rem; color: var(--text-second);
+    text-align: center; line-height: 1.5;
+}
+
+.qr-canvas {
+    background: #fff; padding: 12px; border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.qr-canvas canvas, .qr-canvas img { display: block; }
+
+.qr-equipo-info { text-align: center; }
+.qr-equipo-nombre {
+    font-family: 'Bebas Neue', cursive; font-size: 1.2rem;
+    letter-spacing: 3px; color: var(--text-primary);
+}
+.qr-equipo-cat {
+    font-size: 0.65rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--text-muted);
+}
+
+.qr-actions { display: flex; gap: 0.8rem; }
+.btn-print-qr {
+    padding: 0.7rem 1.5rem; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), #a07828);
+    border: none; color: #000; font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem; font-weight: 700; cursor: pointer;
+    letter-spacing: 0.5px; transition: all 0.2s;
+}
+.btn-print-qr:hover { transform: translateY(-1px); }
+
+/* ════════════════════════════════
+   ZONA DE IMPRESIÓN
+   - Oculta en pantalla
+   - Visible solo al imprimir
+════════════════════════════════ */
+.zona-print { display: none; }
+
+@media print {
+    /* Ocultar TODO excepto la zona de impresión */
+    body > *:not(.zona-print) { display: none !important; }
+    .zona-print { display: block !important; }
+
+    @page {
+        size: letter;
+        margin: 10mm;
+    }
+
+    /* Grid de credenciales: 2 columnas x 2 filas = 4 por hoja */
+    .print-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8mm;
+        width: 100%;
+    }
+
+    /* líneas de corte entre credenciales */
+    .print-grid-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* ── CREDENCIAL FÍSICA ── */
+    .credencial {
+        width: 100%;
+        aspect-ratio: 85.6 / 54; /* proporción tarjeta de crédito */
+        border-radius: 4mm;
+        overflow: hidden;
+        position: relative;
+        border: 0.5mm solid #ccc;
+        font-family: 'Outfit', sans-serif;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* cabecera de color del equipo */
+    .cred-header {
+        height: 38%;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 2mm 3mm;
+        gap: 2mm;
+    }
+
+    .cred-header-pattern {
+        position: absolute; inset: 0;
+        background-image: repeating-linear-gradient(
+            -45deg,
+            rgba(255,255,255,0.06) 0px,
+            rgba(255,255,255,0.06) 2px,
+            transparent 2px, transparent 8px
+        );
+    }
+
+    .cred-foto {
+        width: 14mm; height: 14mm;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 0.5mm solid rgba(255,255,255,0.5);
+        flex-shrink: 0;
+        position: relative; z-index: 1;
+    }
+
+    .cred-dorsal-bg {
+        position: absolute; right: 2mm; top: 50%;
+        transform: translateY(-50%);
+        font-family: 'Bebas Neue', cursive;
+        font-size: 18mm;
+        color: rgba(255,255,255,0.1);
+        line-height: 1;
+        user-select: none;
+    }
+
+    .cred-header-info {
+        flex: 1; position: relative; z-index: 1;
+    }
+
+    .cred-nombre {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 4mm; letter-spacing: 0.5mm;
+        color: #fff; line-height: 1.1;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .cred-num {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 3mm; color: rgba(255,255,255,0.7);
+        letter-spacing: 0.3mm;
+    }
+
+    /* cuerpo blanco */
+    .cred-body {
+        flex: 1;
+        background: #fff;
+        padding: 1.5mm 3mm;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2mm;
+    }
+
+    .cred-datos { flex: 1; }
+
+    .cred-dato-row {
+        display: flex; align-items: center; gap: 1mm;
+        margin-bottom: 0.8mm;
+    }
+
+    .cred-dato-label {
+        font-size: 1.8mm; font-weight: 700;
+        color: #888; text-transform: uppercase; letter-spacing: 0.3mm;
+        min-width: 12mm;
+    }
+
+    .cred-dato-value {
+        font-size: 2mm; font-weight: 600; color: #222;
+    }
+
+    .cred-badge-refuerzo {
+        display: inline-block;
+        background: #f0c040; color: #000;
+        font-size: 1.5mm; font-weight: 800;
+        padding: 0.3mm 1.5mm; border-radius: 2mm;
+        text-transform: uppercase; letter-spacing: 0.3mm;
+        margin-top: 0.5mm;
+    }
+
+    /* logo/club derecha */
+    .cred-club {
+        display: flex; flex-direction: column; align-items: center; gap: 0.5mm;
+        flex-shrink: 0;
+    }
+
+    .cred-club-logo {
+        font-size: 5mm;
+    }
+
+    .cred-club-nombre {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 1.8mm; letter-spacing: 0.3mm;
+        color: #444; text-align: center;
+    }
+
+    /* pie */
+    .cred-footer {
+        height: 5mm;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 3mm;
+        background: #f5f5f5;
+        border-top: 0.3mm solid #e0e0e0;
+    }
+
+    .cred-footer-text {
+        font-size: 1.6mm; color: #999; letter-spacing: 0.2mm;
+    }
+
+    .cred-temporada {
+        font-size: 1.6mm; font-weight: 700; color: #666;
+    }
+
+    /* ── GUÍAS DE CORTE ── */
+    .cut-guide {
+        border: 0.2mm dashed #bbb;
+        margin: 0;
+    }
+
+    /* ── HOJA DE QR ── */
+    .print-qr-page {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        min-height: 200mm; gap: 8mm; text-align: center;
+    }
+
+    .print-qr-titulo {
+        font-family: 'Bebas Neue', cursive;
+        font-size: 10mm; letter-spacing: 3mm; color: #1a1a2e;
+    }
+
+    .print-qr-sub {
+        font-size: 4mm; color: #666; letter-spacing: 1mm;
+    }
+
+    .print-qr-box {
+        border: 0.5mm solid #ddd; padding: 6mm; border-radius: 4mm;
+    }
+
+    .print-qr-instruccion {
+        font-size: 3.5mm; color: #444; max-width: 80mm; line-height: 1.5;
+    }
+}

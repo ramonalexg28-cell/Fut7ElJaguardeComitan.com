@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Diseños — Fut 7 El Jaguar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        var t = localStorage.getItem('tema_jaguar') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+    </script>
+    <style>
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        :root {
+            --bg:       #0d1b2e;
+            --surface:  #111f35;
+            --surface2: #162840;
+            --surface3: #1c3352;
+            --border:   rgba(255,255,255,0.07);
+            --border2:  rgba(255,255,255,0.14);
+            --text:     #f0f4ff;
+            --text2:    rgba(240,244,255,0.6);
+            --text3:    rgba(240,244,255,0.3);
+            --accent:   #4f8ef7;
+            --gold:     #e0b84a;
+            --gold-dim: rgba(224,184,74,0.15);
+            --red:      #f05f5f;
+            --shadow:   rgba(0,0,0,0.5);
+        }
+        [data-theme="light"] {
+            --bg:       #e8eef6;
+            --surface:  #f4f7fc;
+            --surface2: #ffffff;
+            --surface3: #eef2f8;
+            --border:   rgba(0,0,0,0.07);
+            --border2:  rgba(0,0,0,0.14);
+            --text:     #0f1e35;
+            --text2:    rgba(15,30,53,0.6);
+            --text3:    rgba(15,30,53,0.3);
+            --accent:   #2563eb;
+            --gold:     #a07828;
+            --gold-dim: rgba(160,120,40,0.1);
+            --red:      #dc2626;
+            --shadow:   rgba(0,0,0,0.1);
+        }
+
+        html, body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            position: sticky; top: 0; z-index: 50;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.9rem 2rem;
+            background: rgba(13,27,46,0.96);
+            border-bottom: 1px solid var(--border2);
+            backdrop-filter: blur(16px);
+        }
+        [data-theme="light"] .header { background: rgba(244,247,252,0.96); }
+
+        .header-brand {
+            display: flex; align-items: center; gap: 0.7rem;
+        }
+        .brand-icon { font-size: 1.5rem; }
+        .brand-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.2rem; letter-spacing: 4px; color: var(--text);
+        }
+        .brand-sub {
+            font-size: 0.58rem; letter-spacing: 3px;
+            text-transform: uppercase; color: var(--gold); font-weight: 600;
+        }
+
+        .header-info {
+            text-align: center;
+        }
+        .header-cat {
+            font-size: 0.7rem; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--text3);
+        }
+        .header-equipo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.1rem; letter-spacing: 2px; color: var(--accent);
+        }
+
+        .btn-volver {
+            background: var(--surface2); border: 1px solid var(--border2);
+            color: var(--text2); padding: 0.55rem 1.1rem; border-radius: 10px;
+            font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; letter-spacing: 1px; transition: all 0.2s;
+        }
+        .btn-volver:hover { border-color: var(--accent); color: var(--text); }
+
+        /* ── MAIN ── */
+        .container {
+            max-width: 1100px; margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .page-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.6rem; letter-spacing: 4px;
+            color: var(--text); margin-bottom: 0.3rem;
+        }
+        .page-sub {
+            font-size: 0.8rem; color: var(--text3);
+            margin-bottom: 2rem;
+        }
+
+        /* ── GRID ── */
+        .disenos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.2rem;
+        }
+
+        /* ── TARJETA NUEVO DISEÑO ── */
+        .card-nuevo {
+            background: var(--surface);
+            border: 2px dashed var(--border2);
+            border-radius: 18px;
+            min-height: 200px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: all 0.22s;
+        }
+        .card-nuevo:hover {
+            border-color: var(--accent);
+            background: rgba(79,142,247,0.06);
+            transform: translateY(-3px);
+        }
+        .card-nuevo-icon {
+            width: 52px; height: 52px; border-radius: 50%;
+            background: rgba(79,142,247,0.15);
+            border: 2px solid rgba(79,142,247,0.35);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+        }
+        .card-nuevo-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.1rem; letter-spacing: 3px; color: var(--accent);
+        }
+        .card-nuevo-sub {
+            font-size: 0.72rem; color: var(--text3);
+        }
+
+        /* ── TARJETA DISEÑO EXISTENTE ── */
+        .card-diseno {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.22s;
+            position: relative;
+        }
+        .card-diseno:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+        .card-diseno.asignado {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 1px var(--gold);
+        }
+
+        /* mini preview del diseño */
+        .card-preview {
+            width: 100%; height: 130px;
+            position: relative; overflow: hidden;
+            border-radius: 0;
+        }
+        .card-preview-bg {
+            position: absolute; inset: 0;
+        }
+        .card-preview-label {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1rem; letter-spacing: 3px;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .card-badge-asignado {
+            position: absolute; top: 8px; right: 8px;
+            background: var(--gold); color: #000;
+            font-size: 0.55rem; font-weight: 800;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            padding: 2px 8px; border-radius: 20px;
+        }
+
+        .card-body {
+            padding: 0.9rem 1rem;
+        }
+        .card-nombre {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1rem; letter-spacing: 2px;
+            color: var(--text); margin-bottom: 2px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .card-fecha {
+            font-size: 0.67rem; color: var(--text3);
+        }
+
+        .card-actions {
+            display: flex; gap: 0.5rem;
+            padding: 0 1rem 0.9rem;
+        }
+        .btn-editar {
+            flex: 1; padding: 0.5rem;
+            background: rgba(79,142,247,0.15);
+            border: 1px solid rgba(79,142,247,0.35);
+            color: var(--accent);
+            border-radius: 8px; font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem; font-weight: 700;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .btn-editar:hover { background: rgba(79,142,247,0.28); }
+
+        .btn-eliminar-card {
+            padding: 0.5rem 0.8rem;
+            background: rgba(240,95,95,0.1);
+            border: 1px solid rgba(240,95,95,0.3);
+            color: var(--red);
+            border-radius: 8px; font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem; font-weight: 700;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .btn-eliminar-card:hover { background: rgba(240,95,95,0.22); }
+
+        /* ── ESTADO VACÍO ── */
+        .estado-vacio {
+            grid-column: 1 / -1;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 0.6rem; padding: 3rem 1rem; text-align: center;
+        }
+        .vacio-icon { font-size: 2.5rem; opacity: 0.3; }
+        .vacio-title {
+            font-family: 'Bebas Neue', cursive; font-size: 1.2rem;
+            letter-spacing: 3px; color: var(--text2);
+        }
+        .vacio-sub { font-size: 0.75rem; color: var(--text3); }
+
+        /* ── MODAL CONFIRMAR ELIMINAR ── */
+        .overlay { position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;z-index:100;backdrop-filter:blur(6px); }
+        .overlay.activo { display:block; }
+        .modal {
+            position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.95);
+            background:var(--surface2);border:1px solid var(--border2);border-radius:20px;
+            padding:2rem;width:90%;max-width:340px;
+            display:none;z-index:101;opacity:0;transition:all 0.2s;
+            box-shadow:0 20px 60px rgba(0,0,0,0.6);
+        }
+        .modal.activo { display:block;opacity:1;transform:translate(-50%,-50%) scale(1); }
+        .modal-icon { font-size:2rem;text-align:center;margin-bottom:0.7rem; }
+        .modal-title { font-family:'Bebas Neue',cursive;font-size:1.2rem;letter-spacing:3px;text-align:center;color:var(--red);margin-bottom:0.5rem; }
+        .modal-text { font-size:0.8rem;color:var(--text2);text-align:center;margin-bottom:1.2rem;line-height:1.5; }
+        .modal-btns { display:flex;gap:0.7rem; }
+        .modal-btns button { flex:1;padding:0.65rem;border-radius:10px;font-family:'Outfit',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;border:none;transition:all 0.18s; }
+        .btn-cancel-modal { background:var(--surface3);border:1px solid var(--border2)!important;color:var(--text2); }
+        .btn-delete-modal { background:linear-gradient(135deg,var(--red),#b91c1c);color:#fff; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-brand">
+        <div class="brand-icon">🎨</div>
+        <div>
+            <div class="brand-title">JAGUAR</div>
+            <div class="brand-sub">Mis Diseños</div>
+        </div>
+    </div>
+    <div class="header-info">
+        <div class="header-cat" id="headerCat">Categoría</div>
+        <div class="header-equipo" id="headerEquipo">Equipo</div>
+    </div>
+    <button class="btn-volver" onclick="history.back()">← Volver</button>
+</header>
+
+<main class="container">
+    <div class="page-title">Diseños de Credencial</div>
+    <div class="page-sub" id="pageSub">Selecciona un diseño para editarlo o crea uno nuevo</div>
+
+    <div class="disenos-grid" id="disenosGrid"></div>
+</main>
+
+<!-- Modal eliminar -->
+<div class="overlay" id="overlay"></div>
+<div class="modal" id="modalEliminar">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">Eliminar Diseño</div>
+    <p class="modal-text">¿Eliminar "<span id="nombreEliminar" style="color:var(--red);font-weight:700"></span>"? Esta acción no se puede deshacer.</p>
+    <div class="modal-btns">
+        <button class="btn-cancel-modal" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn-delete-modal" onclick="confirmarEliminar()">Eliminar</button>
+    </div>
+</div>
+
+<script>
+    var params    = new URLSearchParams(window.location.search);
+    var categoria = params.get('categoria') || '';
+    var equipo    = params.get('equipo')    || '';
+
+    var KEY_DISENOS    = 'disenos_credencial';
+    var KEY_ASIGNACION = 'diseno_asignado_';
+    var disenoAEliminar = null;
+
+    document.getElementById('headerCat').textContent    = categoria || 'Sin categoría';
+    document.getElementById('headerEquipo').textContent = equipo    || '';
+    if (categoria && equipo) {
+        document.getElementById('pageSub').textContent = 'Diseños para ' + equipo + ' · ' + categoria;
+    }
+
+    function getDisenos() { return JSON.parse(localStorage.getItem(KEY_DISENOS)) || []; }
+    function saveDisenos(d) { localStorage.setItem(KEY_DISENOS, JSON.stringify(d)); }
+    function getAsignado() { return localStorage.getItem(KEY_ASIGNACION + categoria) || null; }
+
+    function urlEditor(id) {
+        var base = 'editor-central.html?categoria=' + encodeURIComponent(categoria) + '&equipo=' + encodeURIComponent(equipo);
+        return id ? base + '&id=' + encodeURIComponent(id) : base;
+    }
+
+    function formatFecha(ts) {
+        if (!ts) return '';
+        var d = new Date(ts);
+        return d.toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' });
+    }
+
+    function renderGrid() {
+        var grid      = document.getElementById('disenosGrid');
+        var disenos   = getDisenos();
+        var asignado  = getAsignado();
+        grid.innerHTML = '';
+
+        // Tarjeta NUEVO DISEÑO siempre primera
+        var cardNuevo = document.createElement('div');
+        cardNuevo.className = 'card-nuevo';
+        cardNuevo.innerHTML =
+            '<div class="card-nuevo-icon">+</div>' +
+            '<div class="card-nuevo-title">Nuevo Diseño</div>' +
+            '<div class="card-nuevo-sub">Crear desde cero</div>';
+        cardNuevo.onclick = function() { location.href = urlEditor(null); };
+        grid.appendChild(cardNuevo);
+
+        if (disenos.length === 0) {
+            var vacio = document.createElement('div');
+            vacio.className = 'estado-vacio';
+            vacio.innerHTML =
+                '<div class="vacio-icon">🎨</div>' +
+                '<div class="vacio-title">Sin diseños guardados</div>' +
+                '<div class="vacio-sub">Crea tu primer diseño de credencial</div>';
+            grid.appendChild(vacio);
+            return;
+        }
+
+        // Diseños guardados — más reciente primero
+        disenos.slice().sort(function(a,b){ return (b.fechaGuardado||0)-(a.fechaGuardado||0); }).forEach(function(d) {
+            var card = document.createElement('div');
+            card.className = 'card-diseno' + (d.id === asignado ? ' asignado' : '');
+
+            var c1 = d.bgColor1 || d.colorFondo  || '#1d4ed8';
+            var c2 = d.bgColor2 || d.colorFondo2 || '#0a1628';
+
+            card.innerHTML =
+                '<div class="card-preview">' +
+                    '<div class="card-preview-bg" style="background:linear-gradient(135deg,'+c1+','+c2+')"></div>' +
+                    '<div class="card-preview-label">' + escHtml(d.nombre || 'Sin nombre') + '</div>' +
+                    (d.id === asignado ? '<div class="card-badge-asignado">✓ Asignado</div>' : '') +
+                '</div>' +
+                '<div class="card-body">' +
+                    '<div class="card-nombre">' + escHtml(d.nombre || 'Sin nombre') + '</div>' +
+                    '<div class="card-fecha">' + (d.fechaGuardado ? 'Guardado ' + formatFecha(d.fechaGuardado) : '') + '</div>' +
+                '</div>' +
+                '<div class="card-actions">' +
+                    '<button class="btn-editar" onclick="editarDiseno(\''+d.id+'\',event)">✏️ Editar</button>' +
+                    '<button class="btn-eliminar-card" onclick="pedirEliminar(\''+d.id+'\',\''+escHtml(d.nombre||'Sin nombre')+'\',event)">🗑️</button>' +
+                '</div>';
+
+            // Clic en la tarjeta (no en botones) → editar
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('button')) return;
+                location.href = urlEditor(d.id);
+            });
+
+            grid.appendChild(card);
+        });
+    }
+
+    function editarDiseno(id, e) {
+        if (e) e.stopPropagation();
+        location.href = urlEditor(id);
+    }
+
+    function pedirEliminar(id, nombre, e) {
+        if (e) e.stopPropagation();
+        disenoAEliminar = id;
+        document.getElementById('nombreEliminar').textContent = nombre;
+        document.getElementById('overlay').classList.add('activo');
+        document.getElementById('modalEliminar').classList.add('activo');
+    }
+    function cerrarModal() {
+        disenoAEliminar = null;
+        document.getElementById('overlay').classList.remove('activo');
+        document.getElementById('modalEliminar').classList.remove('activo');
+    }
+    function confirmarEliminar() {
+        if (!disenoAEliminar) return;
+        var ds = getDisenos().filter(function(d){ return d.id !== disenoAEliminar; });
+        saveDisenos(ds);
+        // Si era el asignado, quitar asignación
+        if (localStorage.getItem(KEY_ASIGNACION + categoria) === disenoAEliminar) {
+            localStorage.removeItem(KEY_ASIGNACION + categoria);
+        }
+        cerrarModal();
+        renderGrid();
+    }
+
+    document.getElementById('overlay').onclick = cerrarModal;
+
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    renderGrid();
+</script>
+</body>
+</html>
