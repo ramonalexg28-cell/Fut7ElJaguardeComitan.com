@@ -1,0 +1,87 @@
+/* ========== ESTILOS BASE Y FUENTES ========== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Rubik:wght@400;500;700;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 0.5rem;
+    position: relative;
+    overflow-x: hidden; /* QUITAR SCROLL HORIZONTAL */
+    max-width: 100vw; /* PREVENIR DESBORDAMIENTO */
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 51px),
+        repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(255,255,255,0.03) 50px, rgba(255,255,255,0.03) 51px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.rol-container {
+    max-width: 1200px;
+    width: 100%; /* ASEGURAR QUE NO SE DESBORDE */
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    overflow-x: hidden; /* QUITAR SCROLL HORIZONTAL EN CONTENEDOR */
+}
+
+/* SCROLL */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a2e;
+    border: 2px solid #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    border: 2px solid #000;
+}
+
+/* MENSAJE INFO */
+.mensaje-info {
+    text-align: center;
+    color: #2d3436;
+    padding: 1rem;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    border-radius: 10px;
+    border: 2px solid #000;
+    box-shadow: 3px 3px 0 #000;
+}
+
+/* OPTIMIZACIÓN PARA PDF */
+@media print {
+    body {
+        background: #fff !important;
+        zoom: 80%;
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .jornadas-grid {
+        grid-template-columns: 1fr;
+    }
+}

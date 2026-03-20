@@ -1,0 +1,282 @@
+/* ========== ESTILOS DE JORNADAS ========== */
+
+/* DISTRIBUCIÓN EN CUADRÍCULA */
+.jornadas-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 0.5rem !important;
+    width: 100%;
+    align-items: start;
+}
+
+.jornadas-container {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* Quitar scroll horizontal */
+}
+
+.jornada {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border: 2px solid #000;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 3px 3px 0 #000;
+    width: 100%;
+    max-width: 100%; /* Prevenir desbordamiento */
+    display: flex;
+    flex-direction: column;
+}
+
+.jornada-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0.25rem 0.5rem;
+    text-align: center;
+    border-bottom: 2px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap; /* Prevenir desbordamiento */
+}
+
+.jornada-header h3 {
+    font-family: 'Bangers', cursive;
+    color: #fff;
+    font-size: 0.85rem;
+    margin: 0;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.checkbox-jugada {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    cursor: pointer;
+}
+
+.checkbox-jugada input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.checkbox-jugada label {
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 900;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* JORNADA JUGADA NORMAL */
+.jornada.jugada {
+    opacity: 0.7;
+}
+
+.jornada.jugada .jornada-header {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+/* ========== JORNADA ACTUAL - BORDE ROJO BRILLANTE ========== */
+.jornada.jornada-actual {
+    border: 5px solid transparent;
+    background-image: 
+        linear-gradient(white, white),
+        linear-gradient(135deg, #ff0000 0%, #ff4444 25%, #ff0000 50%, #ff6666 75%, #ff0000 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 
+        0 0 20px rgba(255, 0, 0, 0.6),
+        0 0 40px rgba(255, 0, 0, 0.4),
+        inset 0 0 15px rgba(255, 0, 0, 0.2),
+        3px 3px 0 #000;
+    animation: redShine 2s ease-in-out infinite;
+    position: relative;
+}
+
+.jornada.jornada-actual::before {
+    content: '🔴';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 1.5rem;
+    z-index: 10;
+    animation: pulsate 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.8));
+}
+
+@keyframes redShine {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(255, 0, 0, 0.6),
+            0 0 40px rgba(255, 0, 0, 0.4),
+            inset 0 0 15px rgba(255, 0, 0, 0.2),
+            3px 3px 0 #000;
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(255, 0, 0, 0.9),
+            0 0 60px rgba(255, 0, 0, 0.7),
+            inset 0 0 25px rgba(255, 0, 0, 0.4),
+            3px 3px 0 #000;
+    }
+}
+
+@keyframes pulsate {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+.jornada.jornada-actual .jornada-header {
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 50%, #ff0000 100%);
+}
+
+.jornada.jornada-actual .jornada-header h3 {
+    color: #fff;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.jornada.jornada-actual .checkbox-jugada label {
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* JORNADA COMPLETAMENTE JUGADA - BORDE DORADO BRILLANTE */
+.jornada.jornada-completa {
+    border: 5px solid transparent;
+    background-image: 
+        linear-gradient(white, white),
+        linear-gradient(135deg, #FFD700 0%, #FFA500 25%, #FFD700 50%, #FFED4E 75%, #FFD700 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.6),
+        0 0 40px rgba(255, 215, 0, 0.4),
+        inset 0 0 15px rgba(255, 215, 0, 0.2),
+        3px 3px 0 #000;
+    animation: goldShine 3s ease-in-out infinite;
+    position: relative;
+}
+
+.jornada.jornada-completa::before {
+    content: '⭐';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 1.5rem;
+    z-index: 10;
+    animation: starRotate 4s linear infinite;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
+}
+
+@keyframes goldShine {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(255, 215, 0, 0.6),
+            0 0 40px rgba(255, 215, 0, 0.4),
+            inset 0 0 15px rgba(255, 215, 0, 0.2),
+            3px 3px 0 #000;
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(255, 215, 0, 0.8),
+            0 0 60px rgba(255, 215, 0, 0.6),
+            inset 0 0 25px rgba(255, 215, 0, 0.4),
+            3px 3px 0 #000;
+    }
+}
+
+@keyframes starRotate {
+    0% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(90deg) scale(1.1); }
+    50% { transform: rotate(180deg) scale(1); }
+    75% { transform: rotate(270deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.jornada.jornada-completa .jornada-header {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%);
+    color: #000;
+}
+
+.jornada.jornada-completa .jornada-header h3 {
+    color: #000;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.jornada.jornada-completa .checkbox-jugada label {
+    color: #000;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ========== JORNADA SUGERENCIA - AZUL BRILLANTE ========== */
+.jornada.jornada-sugerencia {
+    border: 5px solid transparent;
+    background-image: 
+        linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%),
+        linear-gradient(135deg, #2196f3 0%, #1976d2 25%, #42a5f5 50%, #64b5f6 75%, #2196f3 100%);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 
+        0 0 20px rgba(33, 150, 243, 0.6),
+        0 0 40px rgba(33, 150, 243, 0.4),
+        inset 0 0 15px rgba(33, 150, 243, 0.2),
+        3px 3px 0 #000;
+    animation: blueShine 3s ease-in-out infinite;
+    position: relative;
+}
+
+.jornada.jornada-sugerencia::before {
+    content: '🤖';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 1.5rem;
+    z-index: 10;
+    animation: robotBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 5px rgba(33, 150, 243, 0.8));
+}
+
+@keyframes blueShine {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(33, 150, 243, 0.6),
+            0 0 40px rgba(33, 150, 243, 0.4),
+            inset 0 0 15px rgba(33, 150, 243, 0.2),
+            3px 3px 0 #000;
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(33, 150, 243, 0.8),
+            0 0 60px rgba(33, 150, 243, 0.6),
+            inset 0 0 25px rgba(33, 150, 243, 0.4),
+            3px 3px 0 #000;
+    }
+}
+
+@keyframes robotBounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-5px) scale(1.1); }
+}
+
+.jornada.jornada-sugerencia .jornada-header {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 50%, #2196f3 100%);
+}
+
+.jornada.jornada-sugerencia .jornada-header h3 {
+    color: #fff;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+/* DROP ZONE ACTIVA */
+.jornada.drop-zone-active {
+    background: linear-gradient(135deg, #fff9e6 0%, #ffe6b3 100%);
+    border: 3px dashed #ff9800;
+}

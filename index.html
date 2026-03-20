@@ -1,600 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>FUT7 El Jaguar — Inventario y Mantenimiento (Profesional)</title>
-
-    <!-- PWA manifest -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0d6efd" />
-
-    <!-- Fuente -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --bg: #f4f6f9;
-            --card: #ffffff;
-            --text: #111827;
-            --muted: #6b7280;
-            --accent: #0d6efd;
-            --success: #10b981;
-            --danger: #ef4444;
-            --glass: rgba(2, 6, 23, 0.04);
-            --radius: 14px;
-            --shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
-            --anim-fast: 160ms;
-            --anim-medium: 340ms;
-        }
-
-        [data-theme="dark"] {
-            --bg: #0b0f14;
-            --card: #0f1724;
-            --text: #ffffff;
-            --muted: #94a3b8;
-            --accent: #4f8bff;
-            --glass: rgba(255, 255, 255, 0.03);
-            --shadow: 0 10px 30px rgba(1, 4, 10, 0.7);
-        }
-
-        [data-theme="corporate"] {
-            --bg: #f6f9fc;
-            --card: #ffffff;
-            --accent: #e6510c;
-            --text: #0b2340
-        }
-
-        [data-theme="sport"] {
-            --bg: #f2fbf6;
-            --card: #ffffff;
-            --accent: #059669;
-            --text: #053023
-        }
-
-        * {
-            box-sizing: border-box;
-            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-        }
-
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
-
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 32px;
-            background: var(--card);
-            box-shadow: var(--shadow);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04)
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px
-        }
-
-        .logo {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--accent), #7c3aed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #021022;
-            font-weight: 800
-        }
-
-        h1 {
-            font-size: 20px;
-            margin: 0
-        }
-
-        .controls {
-            display: flex;
-            gap: 10px;
-            align-items: center
-        }
-
-        .btn {
-            background: var(--accent);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 0;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform var(--anim-fast)
-        }
-
-        .btn:active {
-            transform: translateY(1px)
-        }
-
-        .btn.ghost {
-            background: transparent;
-            color: var(--accent);
-            border: 1px solid rgba(0, 0, 0, 0.06)
-        }
-
-        .btn.warn {
-            background: var(--danger)
-        }
-
-        .layout {
-            max-width: 1100px;
-            margin: 32px auto;
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 20px;
-            padding: 0 16px
-        }
-
-        /* sidebar */
-        .sidebar {
-            background: var(--card);
-            border-radius: var(--radius);
-            padding: 16px;
-            box-shadow: var(--shadow);
-            height: calc(100vh - 140px);
-            position: sticky;
-            top: 70px;
-            overflow: auto
-        }
-
-        .nav-item {
-            padding: 10px;
-            border-radius: 10px;
-            color: var(--muted);
-            cursor: pointer;
-            margin-bottom: 8px
-        }
-
-        .nav-item.active {
-            background: var(--glass);
-            color: var(--text)
-        }
-
-        /* main */
-        .main {
-            background: transparent
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px
-        }
-
-        .module {
-            background: var(--card);
-            border-radius: 14px;
-            padding: 18px;
-            box-shadow: var(--shadow);
-            transition: all var(--anim-medium);
-            overflow: hidden
-        }
-
-        .module h2 {
-            margin: 0 0 12px 0;
-            color: var(--accent)
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            color: var(--muted);
-            margin-top: 6px
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            margin-top: 8px
-        }
-
-        .list {
-            margin-top: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 320px;
-            overflow: auto
-        }
-
-        .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(0, 0, 0, 0.04);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent)
-        }
-
-        .muted {
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        /* animations */
-        .fade-in {
-            animation: fadeIn var(--anim-medium) ease both
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(6px)
-            }
-
-            to {
-                opacity: 1;
-                transform: none
-            }
-        }
-
-        /* responsive */
-        @media (max-width:980px) {
-            .layout {
-                grid-template-columns: 1fr
-            }
-
-            .sidebar {
-                position: relative;
-                height: auto;
-                top: 0
-            }
-        }
-
-        /* small helpers */
-        .flex {
-            display: flex;
-            gap: 10px;
-            align-items: center
-        }
-
-        .right {
-            text-align: right
-        }
-
-        /* PDF preview styling (hidden) */
-        .pdf-page {
-            width: 794px;
-            padding: 28px;
-            font-family: Inter, Arial;
-            background: white;
-            color: #111
-        }
-
-        .pdf-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center
-        }
-
-        .pdf-title {
-            font-size: 20px;
-            color: var(--accent)
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px
-        }
-
-        th,
-        td {
-            padding: 8px;
-            border: 1px solid #e6e9ef;
-            text-align: left
-        }
-
-        th {
-            background: var(--accent);
-            color: white
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rol de Juegos</title>
+    
+    <!-- ARCHIVOS CSS -->
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="header.css">
+    <link rel="stylesheet" href="botones.css">
+    <link rel="stylesheet" href="estadisticas.css">
+    <link rel="stylesheet" href="jornadas.css">
+    <link rel="stylesheet" href="partidos.css">
+    <link rel="stylesheet" href="modal.css">
 </head>
-
-<body data-theme="light">
+<body>
     <header>
-        <div class="brand">
-            <div class="logo">F7</div>
-            <h1>FUT7 El Jaguar — Inventario & Mantenimiento</h1>
-        </div>
-        <div class="controls">
-            <select id="themeSel" title="Tema" onchange="changeTheme(this.value)">
-                <option value="light">Tema: Claro</option>
-                <option value="dark">Tema: Oscuro</option>
-                <option value="corporate">Tema: Corporativo</option>
-                <option value="sport">Tema: Deportivo</option>
-            </select>
-            <button class="btn ghost" id="exportBtn">Exportar CSV</button>
-            <button class="btn" id="pdfBtn">Exportar PDF</button>
-        </div>
+        <h1 id="tituloRol">🏆 ROL DE JUEGOS 🏆</h1>
     </header>
 
-    <div class="layout">
-        <aside class="sidebar fade-in">
-            <div class="muted">Panel</div>
-            <div class="nav-item active" data-view="inventario" onclick="showView('inventario')">📦 Inventario</div>
-            <div class="nav-item" data-view="salidas" onclick="showView('salidas')">🔧 Salidas</div>
-            <div class="nav-item" data-view="historial" onclick="showView('historial')">📜 Historial & Filtros</div>
-            <div style="margin-top:12px" class="muted">Acciones</div>
-            <div style="margin-top:8px" class="flex">
-                <button class="btn ghost" onclick="resetDatos()">Restablecer</button>
+    <main class="rol-container">
+
+        <!-- BOTONES PRINCIPALES -->
+        <div class="botones-control">
+            <button class="btn btn-generar" id="btnGenerar" onclick="generarRol()">🏆 Crear Rol</button>
+            <button class="btn btn-agregar" id="btnAgregar" onclick="mostrarModalAgregar()" style="display: none;">➕ Agregar Equipos</button>
+            <button class="btn btn-eliminar" id="btnEliminar" onclick="eliminarRol()">🗑️ Eliminar Rol</button>
+            <button class="btn btn-volver" id="btnVolver" onclick="volverAtras()">⬅ Volver</button>
+            <button class="btn btn-generar" id="btnPDF" onclick="descargarPDF()">📄 Descargar PDF</button>
+        </div>
+
+        <!-- ESTADÍSTICAS -->
+        <div id="estadisticasContainer" class="info-estadisticas" style="display: none;">
+            <h3>📊 ESTADÍSTICAS DEL TORNEO</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Total Equipos</div>
+                    <div class="stat-value" id="statEquipos">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Jornadas</div>
+                    <div class="stat-value" id="statJornadas">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Partidos por Jornada</div>
+                    <div class="stat-value" id="statPartidosJornada">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Total Partidos</div>
+                    <div class="stat-value" id="statTotalPartidos">0</div>
+                </div>
             </div>
-            <div style="margin-top:14px" class="muted">Nota: Los datos se guardan en su navegador.</div>
-        </aside>
+        </div>
 
-        <main class="main">
-            <!-- INVENTARIO -->
-            <section id="view-inventario" class="module fade-in">
-                <h2>Entradas — Agregar Inventario</h2>
-                <div class="grid">
-                    <div>
-                        <label>Nombre del suministro</label>
-                        <input id="entNombre" placeholder="Ej: Pasto sintético" />
-                        <label>Cantidad</label>
-                        <input id="entCantidad" type="number" min="1" value="1" />
-                        <button class="btn" onclick="agregarEntrada()">Agregar al inventario</button>
-                    </div>
-                    <div>
-                        <label class="muted">Inventario actual</label>
-                        <div id="listaInventario" class="list"></div>
-                    </div>
-                </div>
-            </section>
+        <!-- NAVEGACIÓN ENTRE JORNADAS -->
+        <div id="navegacionContainer" class="navegacion-jornadas" style="display: none;">
+            <button class="btn-nav" id="btnPrimera" onclick="irAPrimeraJornada()">⏮️ Primera</button>
+            <button class="btn-nav" id="btnAnterior" onclick="cambiarJornada(-1)">◀️ Anterior</button>
 
-            <!-- SALIDAS -->
-            <section id="view-salidas" class="module fade-in" style="display:none;margin-top:20px">
-                <h2>Salidas — Registrar uso en mantenimiento</h2>
-                <div class="grid">
-                    <div>
-                        <label>Suministro</label>
-                        <select id="salNombre"></select>
-                        <label>Cantidad usada</label>
-                        <input id="salCantidad" type="number" min="1" value="1" />
-                        <label>Descripción (opcional)</label>
-                        <input id="salDesc" placeholder="Ej: Reemplazo focos, limpieza cancha" />
-                        <button class="btn" onclick="registrarSalida()">Registrar salida</button>
-                    </div>
-                    <div>
-                        <label class="muted">Historial reciente</label>
-                        <div id="listaSalidas" class="list"></div>
-                    </div>
-                </div>
-            </section>
+            <span class="info-jornada" id="infoJornada">Jornada 1 de 1</span>
 
-            <!-- HISTORIAL & FILTROS -->
-            <section id="view-historial" class="module fade-in" style="display:none;margin-top:20px">
-                <h2>Historial Completo — Filtros & Exportación</h2>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">
-                    <input id="filtroText" placeholder="Buscar por nombre o descripción" />
-                    <input type="date" id="filtroDesde" />
-                    <input type="date" id="filtroHasta" />
-                    <select id="filtroTipo">
-                        <option value="all">Todos</option>
-                        <option value="entrada">Entradas</option>
-                        <option value="salida">Salidas</option>
-                    </select>
-                    <button class="btn" onclick="aplicarFiltros()">Aplicar</button>
-                </div>
-                <div id="historialList" class="list"></div>
-                <div style="margin-top:12px" class="muted">Puedes exportar los resultados filtrados usando los botones
-                    arriba.</div>
-            </section>
+            <button class="btn-nav" id="btnSiguiente" onclick="cambiarJornada(1)">Siguiente ▶️</button>
+            <button class="btn-nav" id="btnUltima" onclick="irAUltimaJornada()">⏭️ Última</button>
 
-        </main>
-    </div>
-
-    <!-- Hidden PDF template container -->
-    <div id="pdfTemplate" style="display:none">
-        <div class="pdf-page">
-            <div class="pdf-header">
-                <div>
-                    <div style="font-weight:700;font-size:18px;color:var(--accent)">FUT7 El Jaguar</div>
-                    <div style="font-size:12px;color:#666">Reporte de Inventario y Mantenimiento</div>
-                </div>
-                <div class="right muted">Generado: <span id="pdfDate"></span></div>
+            <!-- BUSCADOR DE JORNADAS -->
+            <div class="buscador-jornada" id="buscadorJornada" style="display: none;">
+                <input type="number" id="inputBuscarJornada" class="input-buscar-jornada" placeholder="# Jornada" min="1">
+                <button class="btn-nav" onclick="irAJornada()">🔍 Ir</button>
             </div>
 
-            <h3>Inventario actual</h3>
-            <table id="pdfTableInv">
-                <thead>
-                    <tr>
-                        <th>Suministro</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-            <h3 style="margin-top:18px">Historial de salidas</h3>
-            <table id="pdfTableSal">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Suministro</th>
-                        <th>Cantidad</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-            <div style="margin-top:24px;text-align:center;color:#888;font-size:12px">FUT7 El Jaguar — Control interno
+            <!-- SELECTOR DE VISTA -->
+            <div class="vista-selector">
+                <button class="btn-vista active" onclick="cambiarVista('individual')">📄 Individual</button>
+                <button class="btn-vista" onclick="cambiarVista('todas')">📋 Todas</button>
+                <button class="btn-vista btn-vista-sugerencia" onclick="cambiarVista('sugerencia')" style="display: none;">🤖 Sugerencia</button>
             </div>
+        </div>
+
+        <!-- CONTENEDOR DE TODAS LAS JORNADAS -->
+        <div id="jornadasContainer" class="jornadas-container jornadas-grid"></div>
+
+    </main>
+
+    <!-- MODAL AGREGAR EQUIPOS -->
+    <div id="overlayModal" class="overlay-modal" style="display: none;" onclick="cerrarModalAgregar()"></div>
+    <div id="modalAgregar" class="modal-agregar" style="display: none;">
+        <h3>➕ Agregar Equipos al Torneo</h3>
+        <p class="modal-info">
+            ⚠️ <strong>Importante:</strong> Las jornadas marcadas como jugadas se mantendrán intactas.
+            Los nuevos equipos se integrarán en las jornadas restantes.
+        </p>
+        <div class="equipos-disponibles" id="equiposDisponibles">
+            <!-- Se llenará dinámicamente -->
+        </div>
+        <div class="modal-buttons">
+            <button class="btn btn-cancelar" onclick="cerrarModalAgregar()">Cancelar</button>
+            <button class="btn btn-generar" onclick="agregarEquiposAlRol()">✅ Agregar Seleccionados</button>
         </div>
     </div>
 
-    <!-- Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- LIBRERÍAS PDF / CANVAS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <script>
-        /* Data model (localStorage) */
-        const LS = 'fut7_prof_v2';
-        let state = JSON.parse(localStorage.getItem(LS)) || { inventario: [], salidas: [], historial: [] };
-
-        /* Utilities */
-        function save() { localStorage.setItem(LS, JSON.stringify(state)); }
-        function id() { return 'x' + Math.random().toString(36).slice(2, 9) }
-
-        /* Views */
-        function showView(name) { document.querySelectorAll('[id^="view-"]').forEach(v => v.style.display = 'none'); document.getElementById('view-' + name).style.display = 'block'; document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === name)); }
-
-        /* Theme */
-        function changeTheme(t) { document.body.dataset.theme = t; }
-        document.getElementById('themeSel').value = 'light';
-
-        /* Renderers */
-        function renderInventario() {
-            const list = document.getElementById('listaInventario'); list.innerHTML = '';
-            state.inventario.forEach(it => {
-                const div = document.createElement('div'); div.className = 'item';
-                div.innerHTML = `<div><strong>${escape(it.nombre)}</strong><div class='muted'>ID: ${it.id}</div></div><div class='right'>${it.cantidad}</div>`;
-                list.appendChild(div);
-            });
-            document.getElementById('salNombre').innerHTML = state.inventario.map(i => `<option value="${escape(i.id)}">${escape(i.nombre)}</option>`).join('');
-            renderChart();
-        }
-
-        function renderSalidas() {
-            const list = document.getElementById('listaSalidas'); list.innerHTML = '';
-            state.salidas.slice().reverse().forEach(s => {
-                const div = document.createElement('div'); div.className = 'item';
-                div.innerHTML = `<div><strong>${escape(s.nombre)}</strong><div class='muted'>${s.fecha} — ${escape(s.desc || '')}</div></div><div class='right'>-${s.cantidad}</div>`;
-                list.appendChild(div);
-            });
-        }
-
-        function renderHistorial() {
-            const list = document.getElementById('historialList'); list.innerHTML = '';
-            state.historial.slice().reverse().forEach(h => {
-                const div = document.createElement('div'); div.className = 'item';
-                div.innerHTML = `<div><strong>${escape(h.tipo.toUpperCase())}</strong><div class='muted'>${h.fecha} — ${escape(h.detalle)}</div></div><div class='right'>${h.cantidad > 0 ? h.cantidad : '-'}</div>`;
-                list.appendChild(div);
-            });
-        }
-
-        /* Chart */
-        let chart; function renderChart() {
-            const ctx = document.getElementById('graficaInv'); if (!ctx) return;
-            const labels = state.inventario.map(i => i.nombre); const data = state.inventario.map(i => i.cantidad);
-            if (chart) chart.destroy(); chart = new Chart(ctx, { type: 'bar', data: { labels, datasets: [{ label: 'Cantidad', data, backgroundColor: getGradient() }] }, options: { plugins: { legend: { display: false } } } });
-        }
-
-        function getGradient() { return state.inventario.map((_, i) => `rgba(13,110,253,${0.85 - i * 0.05})`) }
-
-        /* Actions */
-        function agregarEntrada() {
-            const nombre = document.getElementById('entNombre').value.trim(); const cantidad = parseInt(document.getElementById('entCantidad').value);
-            if (!nombre || !cantidad || cantidad <= 0) return alert('Ingrese nombre y cantidad válida.');
-            let item = state.inventario.find(x => x.nombre.toLowerCase() === nombre.toLowerCase());
-            if (item) { item.cantidad += cantidad; item.updated = now(); }
-            else { item = { id: id(), nombre, cantidad, created: now() }; state.inventario.push(item); }
-            state.historial.push({ id: id(), tipo: 'entrada', fecha: now(), detalle: `${cantidad} x ${nombre}`, cantidad }); save(); renderInventario(); renderHistorial();
-            document.getElementById('entNombre').value = ''; document.getElementById('entCantidad').value = 1;
-        }
-
-        function registrarSalida() {
-            const sel = document.getElementById('salNombre').value; const cantidad = parseInt(document.getElementById('salCantidad').value); const desc = document.getElementById('salDesc').value.trim();
-            if (!sel || !cantidad || cantidad <= 0) return alert('Seleccione elemento y cantidad.');
-            const item = state.inventario.find(i => i.id === sel); if (!item || item.cantidad < cantidad) return alert('Cantidad insuficiente.');
-            item.cantidad -= cantidad; state.salidas.push({ id: id(), idProd: item.id, nombre: item.nombre, cantidad, fecha: now(), desc });
-            state.historial.push({ id: id(), tipo: 'salida', fecha: now(), detalle: `${cantidad} x ${item.nombre} — ${desc}`, cantidad }); save(); renderSalidas(); renderInventario(); renderHistorial();
-            document.getElementById('salCantidad').value = 1; document.getElementById('salDesc').value = '';
-        }
-
-        function aplicarFiltros() {
-            const q = (document.getElementById('filtroText').value || '').toLowerCase(); const desde = document.getElementById('filtroDesde').value; const hasta = document.getElementById('filtroHasta').value; const tipo = document.getElementById('filtroTipo').value;
-            const res = state.historial.filter(h => {
-                if (tipo !== 'all' && h.tipo !== tipo) return false;
-                if (q && !(h.detalle || '').toLowerCase().includes(q)) return false;
-                if (desde && h.fecha < desde) return false; if (hasta && h.fecha > hasta) return false; return true;
-            });
-            const container = document.getElementById('historialList'); container.innerHTML = res.slice().reverse().map(h => `<div class='item'><div><strong>${escape(h.tipo.toUpperCase())}</strong><div class='muted'>${h.fecha} — ${escape(h.detalle)}</div></div><div class='right'>${h.cantidad > 0 ? h.cantidad : '-'}</div></div>`).join('');
-        }
-
-        /* Exports */
-        document.getElementById('exportBtn').addEventListener('click', () => exportCSV());
-        function exportCSV() {
-            // export inventory and historial
-            let csv = 'tipo,nombre,cantidad,fecha,detalle';
-            state.historial.forEach(h => csv += `${h.tipo},"${h.detalle.replace(/"/g, '""')}",${h.cantidad},${h.fecha},""
-`);
-            const blob = new Blob([csv], { type: 'text/csv' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'fut7_historial.csv'; a.click(); URL.revokeObjectURL(url);
-        }
-
-        document.getElementById('pdfBtn').addEventListener('click', () => exportPDF());
-        function exportPDF() {
-            // build pdf DOM from template
-            const tpl = document.getElementById('pdfTemplate').cloneNode(true); tpl.style.display = 'block'; tpl.id = '';
-            tpl.querySelector('#pdfDate').textContent = now();
-            const tInv = tpl.querySelector('#pdfTableInv tbody'); const tSal = tpl.querySelector('#pdfTableSal tbody');
-            tInv.innerHTML = state.inventario.map(i => `<tr><td>${escape(i.nombre)}</td><td>${i.cantidad}</td></tr>`).join('');
-            tSal.innerHTML = state.salidas.map(s => `<tr><td>${s.date || s.fecha}</td><td>${escape(s.nombre)}</td><td>${s.cantidad}</td><td>${escape(s.desc || '')}</td></tr>`).join('');
-
-            document.body.appendChild(tpl);
-            const opt = { margin: 10, filename: `reporte_fut7_${(new Date()).toISOString().slice(0, 10)}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-            html2pdf().from(tpl).set(opt).save().then(() => tpl.remove());
-        }
-
-        function resetDatos() { if (confirm('Borrar TODOS los datos?')) { state = { inventario: [], salidas: [], historial: [] }; save(); location.reload(); } }
-
-        /* Helpers */
-        function escape(s) { if (!s && s !== 0) return ''; return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]); }
-        function now() { const d = new Date(); return d.toISOString().slice(0, 10); }
-
-        /* Init */
-        function init() { renderInventario(); renderSalidas(); renderHistorial(); applyOffline(); }
-
-        // Service worker registration for PWA
-        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(() => console.warn('SW registration failed')) }
-
-        // Offline: create manifest and sw resources if hosting locally, for demo just init button
-        function applyOffline() { /* placeholder for PWA flow */ }
-
-        init();
-    </script>
-
-    <!-- Service worker & manifest would be served from the host root: /manifest.json and /sw.js
-       Example manifest and sw are included below as comments to copy to your server when deploying. -->
-
-    <!--
-  manifest.json
-  {
-    "name":"FUT7 Inventario",
-    "short_name":"FUT7",
-    "start_url":"/",
-    "display":"standalone",
-    "background_color":"#0d6efd",
-    "theme_color":"#0d6efd",
-    "icons":[{"src":"/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"/icon-512.png","sizes":"512x512","type":"image/png"}]
-  }
-
-  // sw.js
-  const CACHE = 'fut7-cache-v1';
-  const ASSETS = ['/', '/index.html', '/manifest.json', 'https://cdn.jsdelivr.net/npm/chart.js', 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'];
-  self.addEventListener('install', e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))) });
-  self.addEventListener('fetch', e=>{ e.respondWith(caches.match(e.request).then(r=> r || fetch(e.request))) });
-  -->
+    <!-- TUS ARCHIVOS JS EN ORDEN CORRECTO -->
+    <script src="animacion-carga.js"></script>
+    <script src="config.js"></script>
+    <script src="utils.js"></script>
+    <script src="vista-jornadas.js"></script>
+    <script src="sugerencia-partidos.js"></script>
+    <script src="partidos-equipos.js"></script>
+    <script src="rol-generator.js"></script>
 
 </body>
-
 </html>

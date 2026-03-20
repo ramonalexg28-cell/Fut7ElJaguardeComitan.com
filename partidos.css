@@ -1,0 +1,279 @@
+/* ========== ESTILOS DE PARTIDOS ========== */
+
+.partidos {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.partido {
+    background: #fff;
+    padding: 0.4rem 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    gap: 0.5rem;
+    position: relative;
+}
+
+.partido:hover {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+}
+
+.partido.partido-jugado {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    position: relative;
+}
+
+.partido.partido-jugado::after {
+    content: '✓';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #2ecc71;
+}
+
+/* PARTIDO MOVIDO - El original que se quedó en su jornada pero ya no se jugará ahí */
+.partido.partido-movido {
+    background: rgba(200, 200, 200, 0.5);
+    border: 3px dashed #ff9800;
+    position: relative;
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.partido.partido-movido .equipo {
+    color: #4a4a4a;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.partido.partido-movido .vs-badge {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    opacity: 0.7;
+}
+
+.partido.partido-movido .checkbox-partido {
+    opacity: 0.4;
+}
+
+.partido.partido-movido::after {
+    content: '📤';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #ff9800;
+    opacity: 0.7;
+}
+
+/* PARTIDO AGREGADO - La copia que se movió a otra jornada */
+.partido.partido-agregado {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border: 3px dashed #ff9800;
+    position: relative;
+    padding-right: 2.5rem;
+}
+
+.partido.partido-agregado::after {
+    content: '📥';
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #ff9800;
+}
+
+/* ========== ESTILOS PARA VISTA DE SUGERENCIAS ========== */
+
+/* JORNADA SUGERIDA - Borde azul brillante */
+.jornada-sugerencia {
+    border: 4px solid #2196f3;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    box-shadow: 
+        0 0 15px rgba(33, 150, 243, 0.4),
+        3px 3px 0 #000;
+}
+
+.jornada-sugerencia .jornada-header {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+}
+
+.jornada-sugerencia .jornada-header h3 {
+    color: #fff;
+}
+
+/* PARTIDO SUGERIDO - Partidos redistribuidos de equipos nuevos (azul más intenso) */
+.partido.partido-sugerido {
+    background: linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%);
+    border-left: 5px solid #0288d1;
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(2, 136, 209, 0.2);
+}
+
+.partido.partido-sugerido::after {
+    content: '🔄';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #01579b;
+}
+
+/* PARTIDO NORMAL EN SUGERENCIA - Partidos que ya estaban (azul suave) */
+.partido.partido-normal-sugerencia {
+    background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+    border-left: 3px solid #4fc3f7;
+    position: relative;
+}
+
+.partido.partido-normal-sugerencia::after {
+    content: '⚽';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    opacity: 0.6;
+}
+
+/* PARTIDOS JUGADOS EN VISTA SUGERENCIA - Naranja/Dorado suave */
+.jornada-sugerencia .partido.partido-jugado {
+    background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
+    border-left: 4px solid #fb8c00;
+}
+
+.jornada-sugerencia .partido.partido-jugado::after {
+    content: '✓';
+    color: #e65100;
+    font-size: 1.2rem;
+}
+
+/* BOTÓN ELIMINAR PARTIDO AGREGADO */
+.btn-eliminar-agregado {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 1px 1px 0 #000;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.btn-eliminar-agregado:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 2px 2px 0 #000;
+}
+
+/* DRAGGABLE */
+.partido.draggable {
+    cursor: move;
+    opacity: 0.9;
+}
+
+.partido.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+/* CHECKBOX PARTIDO */
+.checkbox-partido {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.checkbox-partido input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+.checkbox-partido label {
+    font-size: 0.6rem;
+    font-weight: 900;
+    cursor: pointer;
+    color: #2d3436;
+}
+
+/* EQUIPOS */
+.equipo {
+    font-weight: 900;
+    flex: 1;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+/* VS BADGE */
+.vs-badge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+    color: #fff;
+    padding: 0.15rem 0.3rem;
+    border-radius: 50%;
+    border: 2px solid #000;
+    font-size: 0.55rem;
+    font-family: 'Bangers';
+}
+
+/* VS BADGE EN SUGERENCIA */
+.jornada-sugerencia .vs-badge {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+}
+
+/* DESCANSO */
+.descanso {
+    background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+    justify-content: center;
+}
+
+.descanso-text {
+    color: #fff;
+    font-weight: 900;
+    font-size: 0.65rem;
+}
+
+/* PARTIDO SUGERIDO DRAGGABLE */
+.partido-sugerido.draggable,
+.partido-normal-sugerencia.draggable {
+    cursor: move;
+    position: relative;
+}
+
+.partido-sugerido.draggable:hover::before,
+.partido-normal-sugerencia.draggable:hover::before {
+    content: '⋮⋮';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #666;
+    opacity: 0.7;
+}
+
+.jornada-sugerencia .partido.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
