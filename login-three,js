@@ -1,0 +1,192 @@
+// =============================================
+//  THREE.JS BACKGROUND — FUT 7 EL JAGUAR
+//  Esferas 3D con iluminación real
+// =============================================
+
+(function initThree() {
+
+  const canvas = document.getElementById('threeCanvas');
+
+  // ── Renderer ──
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+    alpha: false
+  });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+
+  // ── Escena ──
+  const scene = new THREE.Scene();
+  // fondo degradado azul grisáceo claro
+  scene.background = new THREE.Color(0xcdd9e8);
+
+  // ── Cámara ──
+  const camera = new THREE.PerspectiveCamera(
+    45,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    100
+  );
+  camera.position.set(0, 0, 12);
+
+  // ── Luces ──
+
+  // Luz ambiental suave
+  const ambientLight = new THREE.AmbientLight(0xd0dff0, 0.7);
+  scene.add(ambientLight);
+
+  // Luz principal — arriba izquierda (simula ventana)
+  const mainLight = new THREE.DirectionalLight(0xffffff, 1.4);
+  mainLight.position.set(-6, 8, 6);
+  mainLight.castShadow = true;
+  scene.add(mainLight);
+
+  // Luz de relleno — derecha suave
+  const fillLight = new THREE.DirectionalLight(0xb8d4f0, 0.4);
+  fillLight.position.set(6, 2, 4);
+  scene.add(fillLight);
+
+  // Luz de borde trasera — rim light
+  const rimLight = new THREE.DirectionalLight(0x90b8d8, 0.3);
+  rimLight.position.set(0, -4, -6);
+  scene.add(rimLight);
+
+  // ── Material helper ──
+  function makeMaterial(color, roughness, metalness) {
+    return new THREE.MeshStandardMaterial({
+      color: new THREE.Color(color),
+      roughness: roughness,
+      metalness: metalness,
+      envMapIntensity: 0.5,
+    });
+  }
+
+  // ── Geometría base ──
+  const geo = new THREE.SphereGeometry(1, 64, 64);
+
+  // ── ESFERAS IZQUIERDA ──
+
+  // Grande oscura teal — abajo izquierda (parcialmente fuera)
+  const matLBig = makeMaterial(0x3a7880, 0.15, 0.05);
+  const sphereLBig = new THREE.Mesh(geo, matLBig);
+  sphereLBig.scale.set(2.8, 2.8, 2.8);
+  sphereLBig.castShadow = true;
+  scene.add(sphereLBig);
+
+  // Mediana teal más clara — encima y a la derecha de la grande
+  const matLMid = makeMaterial(0x5a9ca4, 0.12, 0.05);
+  const sphereLMid = new THREE.Mesh(geo, matLMid);
+  sphereLMid.scale.set(1.5, 1.5, 1.5);
+  sphereLMid.castShadow = true;
+  scene.add(sphereLMid);
+
+  // Pequeña clara — más arriba
+  const matLSm = makeMaterial(0x78b4bc, 0.1, 0.05);
+  const sphereLSm = new THREE.Mesh(geo, matLSm);
+  sphereLSm.scale.set(0.9, 0.9, 0.9);
+  sphereLSm.castShadow = true;
+  scene.add(sphereLSm);
+
+  // ── ESFERAS DERECHA ──
+
+  // Grande azul claro — arriba derecha (parcialmente cortada)
+  const matRBig = makeMaterial(0x6898b4, 0.12, 0.05);
+  const sphereRBig = new THREE.Mesh(geo, matRBig);
+  sphereRBig.scale.set(2.2, 2.2, 2.2);
+  sphereRBig.castShadow = true;
+  scene.add(sphereRBig);
+
+  // Pequeña azul claro — más abajo
+  const matRSm = makeMaterial(0x88b4cc, 0.1, 0.05);
+  const sphereRSm = new THREE.Mesh(geo, matRSm);
+  sphereRSm.scale.set(1.05, 1.05, 1.05);
+  sphereRSm.castShadow = true;
+  scene.add(sphereRSm);
+
+  // ── Posicionar esferas según tamaño de pantalla ──
+  function positionSpheres() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    // Convertir píxeles a unidades Three.js
+    // A distancia z=12, el frustum cubre aprox ±tan(22.5°)*12 ≈ ±4.97 en Y
+    const aspect = w / h;
+    const frustumH = 2 * Math.tan(THREE.MathUtils.degToRad(22.5)) * 12;
+    const frustumW = frustumH * aspect;
+
+    const rx = frustumW / 2;
+    const ry = frustumH / 2;
+
+    // IZQUIERDA — grande: esquina inf-izq, parcialmente fuera
+    sphereLBig.position.set(-rx - 0.5, -ry + 0.8, 0);
+
+    // IZQUIERDA — mediana: apilada encima-derecha de la grande
+    sphereLMid.position.set(-rx + 2.2, -ry + 2.8, 0.5);
+
+    // IZQUIERDA — pequeña: más arriba
+    sphereLSm.position.set(-rx + 1.0, -ry + 4.8, 0.8);
+
+    // DERECHA — grande: esquina sup-der, parcialmente cortada
+    sphereRBig.position.set(rx + 0.4, ry + 0.2, 0);
+
+    // DERECHA — pequeña: debajo de la grande
+    sphereRSm.position.set(rx - 1.2, ry - 2.8, 0.5);
+  }
+
+  positionSpheres();
+
+  // ── Animación flotante ──
+  const clock = new THREE.Clock();
+
+  // Velocidades y fases distintas para cada esfera
+  const floats = [
+    { mesh: sphereLBig, speed: 0.4, amp: 0.12, phase: 0 },
+    { mesh: sphereLMid, speed: 0.55, amp: 0.10, phase: 1.2 },
+    { mesh: sphereLSm,  speed: 0.7,  amp: 0.08, phase: 2.4 },
+    { mesh: sphereRBig, speed: 0.45, amp: 0.11, phase: 0.8 },
+    { mesh: sphereRSm,  speed: 0.6,  amp: 0.09, phase: 1.8 },
+  ];
+
+  // Posiciones base
+  const basePositions = floats.map(f => ({
+    x: f.mesh.position.x,
+    y: f.mesh.position.y,
+    z: f.mesh.position.z,
+  }));
+
+  // ── Resize ──
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    positionSpheres();
+    // Actualizar posiciones base
+    floats.forEach((f, i) => {
+      basePositions[i].x = f.mesh.position.x;
+      basePositions[i].y = f.mesh.position.y;
+    });
+  });
+
+  // ── Loop ──
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = clock.getElapsedTime();
+
+    floats.forEach((f, i) => {
+      f.mesh.position.y = basePositions[i].y +
+        Math.sin(t * f.speed + f.phase) * f.amp;
+      // leve rotación suave
+      f.mesh.rotation.y = t * 0.05 * (i % 2 === 0 ? 1 : -1);
+    });
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+})();
